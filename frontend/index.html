@@ -9,22 +9,31 @@
 </head>
 <body>
   <header>
-    <h1>LocalPulse</h1>
-    <p>Report a concern or idea in your neighbourhood</p>
+    <div class="header-top">
+      <h1 data-i18n="title">LocalPulse</h1>
+      <select id="language">
+        <option value="en">English</option>
+        <option value="fi">Suomi</option>
+        <option value="sv">Svenska</option>
+      </select>
+    </div>
+    <p data-i18n="subtitle">Report a concern or idea in your neighbourhood</p>
   </header>
 
   <main>
     <div id="map"></div>
 
     <form id="report-form">
-      <label for="note">What's going on?</label>
-      <textarea id="note" placeholder="e.g. Broken streetlight on Otaniementie" required></textarea>
+      <label for="note" data-i18n="noteLabel">What's going on?</label>
+      <div class="note-row">
+        <textarea id="note" data-i18n-placeholder="notePlaceholder" placeholder="e.g. Broken streetlight on Otaniementie"></textarea>
+        <button type="button" id="voice-btn" data-i18n="voiceBtn">🎤 Voice</button>
+      </div>
 
-      <!-- Photo upload placeholder - wire up multipart upload during the hackathon -->
-      <label for="photo">Add a photo (optional)</label>
+      <label for="photo" data-i18n="photoLabel">Add a photo (optional)</label>
       <input type="file" id="photo" accept="image/*" />
 
-      <button type="submit">Submit report</button>
+      <button type="submit" data-i18n="submitBtn">Submit report</button>
     </form>
 
     <div id="status"></div>

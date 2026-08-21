@@ -20,25 +20,25 @@ Residents' concerns and ideas about their neighbourhood often go unheard or get 
 ## What we built
 A working prototype with two core flows:
 
-1. **Report a concern** — a resident submits a photo and/or short voice/text note. AI classifies the issue type, geotags it, and checks for duplicate nearby reports.
-2. **Planner dashboard** — aggregated, anonymized reports are plotted on a map. The AI engine analyses report density and category patterns per area and generates a short, human-readable summary flagging areas that may benefit from attention — combining volume of concerns with (low) community engagement as an early signal, not a stigmatizing label.
+1. **Report a concern** — a resident submits a photo and/or short voice/text note, in Finnish, Swedish, or English. AI classifies the issue type and geotags it.
+2. **Planner dashboard** — reports are plotted on a map and grouped by area (with the area's actual street name, via reverse geocoding). Each area shows a category breakdown, a count of low-confidence classifications flagged for human review, the individual reports (expandable per area), and an AI-generated summary flagging areas that may benefit from attention — combining volume of concerns with category patterns as an early signal, not a stigmatizing label.
 
 ## How AI is used
-- **Classification**: an LLM with vision capability classifies uploaded photos into issue categories (infrastructure, safety, cleanliness, accessibility) and extracts structured detail from voice/text reports.
-- **Duplicate detection**: the LLM compares new reports against nearby existing ones to avoid redundant entries.
-- **Pattern reasoning**: rather than a fixed rule-based threshold, an LLM reviews aggregated, anonymized report data per area and produces a plain-language summary of what's happening in that neighbourhood and why it may warrant attention — this is the meaningful AI contribution, not a bolted-on chatbot.
+- **Classification**: Gemini's vision-capable model classifies uploaded photos, together with the resident's note, into issue categories (infrastructure, safety, cleanliness, accessibility, other) — understanding the note in whichever of the three supported languages it's written in.
+- **Pattern reasoning**: rather than a fixed rule-based threshold, an LLM reviews aggregated report data per area and produces a plain-language summary of what's happening in that neighbourhood and why it may warrant attention — this is the meaningful AI contribution, not a bolted-on chatbot.
 
 ## Responsible AI considerations
 - **Bias & fairness**: areas are framed as "may benefit from attention/investment," not labeled "at risk" or "segregated" — avoids stigmatizing language on a public-facing dashboard.
-- **Privacy**: reports shown on the planner dashboard are aggregated and anonymized; no individual resident identity is exposed.
+- **Privacy**: no submitter identity is ever collected or shown — reports are geotagged, not tied to a person. The dashboard groups reports by area and shows category-level aggregates; individual report text can be expanded per area, but nothing links it back to who filed it.
 - **AI reliability**: classification confidence is shown; low-confidence classifications are flagged for human review rather than auto-routed.
-- **Accessibility**: voice input is supported alongside photo/text to reduce literacy and language barriers.
+- **Accessibility**: voice input and full Finnish/Swedish/English support are available alongside photo/text, to reduce literacy and language barriers.
 - **Transparency**: the planner-facing summary explicitly states it is AI-generated and based on report volume/category patterns, not a definitive assessment.
 
 ## Tech stack
 - Frontend: HTML + vanilla JS, Leaflet.js + OpenStreetMap
 - Backend: FastAPI (Python)
-- AI: Claude (Anthropic API) — vision + text
+- AI: Gemini (Google AI API) — vision + text
+- Geocoding: OpenStreetMap Nominatim (area → street name)
 - Data: SQLite
 
 ## Running the prototype
@@ -64,7 +64,7 @@ python -m http.server 5500
 - Earlier detection of disengagement enables earlier, better-targeted urban renewal investment.
 
 ## What we'd build next
-- "Pitch an idea" flow with AI-assisted proposal drafting.
-- "Discover & join" personalized matching to local community initiatives.
+- "Pitch an idea" flow with AI-assisted proposal drafting — the challenge asks residents to pitch improvement ideas, not just report concerns; this isn't built yet.
+- "Discover & join" personalized matching to local community initiatives — also part of the challenge brief and not yet built.
+- Duplicate-report detection, so repeat reports of the same issue are merged rather than counted separately.
 - Real integration with Espoo's open data (socio-economic indicators, green space, building age) to strengthen the pattern-detection signal.
-- Multi-language support (Finnish, Swedish, English) throughout.

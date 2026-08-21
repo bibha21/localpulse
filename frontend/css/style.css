@@ -11,9 +11,47 @@ header {
   color: white;
 }
 
+.header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
 header h1 {
   margin: 0 0 4px;
   font-size: 20px;
+}
+
+#language {
+  padding: 4px 8px;
+  border-radius: 6px;
+  border: none;
+}
+
+.note-row {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.note-row textarea {
+  flex: 1;
+}
+
+#voice-btn {
+  background: #0c447c;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 10px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+#voice-btn:disabled {
+  background: #999;
+  cursor: not-allowed;
 }
 
 header p {

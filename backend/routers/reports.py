@@ -1,5 +1,4 @@
-from fastapi import APIRouter
-from pydantic import BaseModel
+from fastapi import APIRouter, Form, UploadFile
 
 from database import get_connection
 from ai_service import classify_report
@@ -7,17 +6,15 @@ from ai_service import classify_report
 router = APIRouter()
 
 
-class ReportIn(BaseModel):
-    text_note: str | None = None
-    latitude: float
-    longitude: float
-    # photo upload handled separately in a real build (multipart/form-data);
-    # kept out of this stub to keep the skeleton simple to run immediately
-
-
 @router.post("/")
-def submit_report(report: ReportIn):
-    classification = classify_report(photo_bytes=None, text_note=report.text_note)
+async def submit_report(
+    latitude: float = Form(...),
+    longitude: float = Form(...),
+    text_note: str | None = Form(None),
+    photo: UploadFile | None = None,
+):
+    photo_bytes = await photo.read() if photo is not None else None
+    classification = classify_report(photo_bytes=photo_bytes, text_note=text_note)
 
     conn = get_connection()
     cur = conn.execute(
@@ -27,9 +24,9 @@ def submit_report(report: ReportIn):
         """,
         (
             classification["category"],
-            report.text_note,
-            report.latitude,
-            report.longitude,
+            text_note,
+            latitude,
+            longitude,
             classification["confidence"],
             int(classification["needs_review"]),
         ),

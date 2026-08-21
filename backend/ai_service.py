@@ -1,26 +1,68 @@
 """
-AI service layer. Calls a vision-capable LLM for classification and
+AI service layer. Calls Gemini's vision-capable model for classification and
 an LLM for pattern reasoning over aggregated report data.
 
-Set ANTHROPIC_API_KEY (or OPENAI_API_KEY) in a local .env file - never commit it.
+Set GEMINI_API_KEY in a local .env file - never commit it.
 """
-import base64
+import json
 import os
 
-# import anthropic  # uncomment once the SDK is installed
+from dotenv import load_dotenv
+from google import genai
+from google.genai import types
+
+load_dotenv()
+
+_api_key = os.environ.get("GEMINI_API_KEY")
+_client = genai.Client(api_key=_api_key) if _api_key else None
 
 CATEGORIES = ["infrastructure", "safety", "cleanliness", "accessibility", "other"]
+
+_CLASSIFY_PROMPT = f"""You are triaging a resident-submitted neighbourhood report for a local
+civic issue tracker. Classify it into exactly one of these categories: {", ".join(CATEGORIES)}.
+
+The resident's note may be written in Finnish, Swedish, or English - understand it in
+whichever language it's written in. Regardless of the note's language, always output the
+"category" value exactly as one of the English strings listed above, never translated.
+
+Respond with ONLY a JSON object (no markdown fences) matching this shape:
+{{"category": "<one of the categories above>", "confidence": <float 0-1>, "needs_review": <true/false>}}
+
+Set needs_review to true if the photo and/or note is ambiguous, low quality, or you are not
+reasonably confident in the category.
+"""
 
 
 def classify_report(photo_bytes: bytes | None, text_note: str | None) -> dict:
     """
-    Classify a resident report into a category using a vision-capable LLM.
+    Classify a resident report into a category using Gemini's vision model.
     Returns: {"category": str, "confidence": float, "needs_review": bool}
-
-    TODO (hackathon): replace this stub with a real Claude/GPT vision call.
-    Keep the response contract the same so the rest of the app doesn't change.
     """
-    # --- stub logic for early development before the AI call is wired up ---
+    if not _client:
+        return _stub_classify(text_note)
+
+    parts: list = [_CLASSIFY_PROMPT]
+    if text_note:
+        parts.append(f"Resident's note: {text_note}")
+    if photo_bytes:
+        parts.append(types.Part.from_bytes(data=photo_bytes, mime_type="image/jpeg"))
+
+    try:
+        response = _client.models.generate_content(model="gemini-3.6-flash", contents=parts)
+        raw = response.text.strip().removeprefix("```json").removeprefix("```").removesuffix("```").strip()
+        result = json.loads(raw)
+        return {
+            "category": result.get("category", "other"),
+            "confidence": float(result.get("confidence", 0.4)),
+            "needs_review": bool(result.get("needs_review", True)),
+        }
+    except Exception as exc:
+        print(f"Gemini classification failed, falling back to stub: {exc}")
+        return _stub_classify(text_note)
+
+
+def _stub_classify(text_note: str | None) -> dict:
+    """Fallback used when GEMINI_API_KEY is missing or the API call fails."""
     if text_note and "light" in text_note.lower():
         return {"category": "infrastructure", "confidence": 0.9, "needs_review": False}
     return {"category": "other", "confidence": 0.4, "needs_review": True}
