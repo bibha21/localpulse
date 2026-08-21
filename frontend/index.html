@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LocalPulse - Report a concern</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header>
+    <h1>LocalPulse</h1>
+    <p>Report a concern or idea in your neighbourhood</p>
+  </header>
+
+  <main>
+    <div id="map"></div>
+
+    <form id="report-form">
+      <label for="note">What's going on?</label>
+      <textarea id="note" placeholder="e.g. Broken streetlight on Otaniementie" required></textarea>
+
+      <!-- Photo upload placeholder - wire up multipart upload during the hackathon -->
+      <label for="photo">Add a photo (optional)</label>
+      <input type="file" id="photo" accept="image/*" />
+
+      <button type="submit">Submit report</button>
+    </form>
+
+    <div id="status"></div>
+  </main>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

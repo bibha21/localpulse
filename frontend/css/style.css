@@ -1,0 +1,69 @@
+body {
+  font-family: system-ui, sans-serif;
+  margin: 0;
+  padding: 0;
+  color: #222;
+}
+
+header {
+  padding: 16px 20px;
+  background: #0c447c;
+  color: white;
+}
+
+header h1 {
+  margin: 0 0 4px;
+  font-size: 20px;
+}
+
+header p {
+  margin: 0;
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+main {
+  padding: 16px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+#map {
+  height: 300px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+#report-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+#report-form textarea {
+  min-height: 80px;
+  padding: 8px;
+  font-size: 14px;
+}
+
+#report-form button {
+  background: #0c447c;
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+#status {
+  margin-top: 12px;
+  font-size: 14px;
+}
+
+.area-card {
+  background: #f1efe8;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 10px;
+}
