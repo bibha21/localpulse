@@ -26,6 +26,42 @@ def classify_report(photo_bytes: bytes | None, text_note: str | None) -> dict:
     return {"category": "other", "confidence": 0.4, "needs_review": True}
 
 
+def predict_impact(idea_text: str) -> dict:
+    """
+    Estimate the likely social/environmental impact of a pitched community idea.
+    Returns: {"social_connectivity_pct": int, "environmental_impact": str}
+
+    TODO (hackathon): replace this stub with a real LLM call. Keep the
+    response contract the same so the Idea Incubator UI doesn't change.
+    """
+    text = (idea_text or "").lower()
+    environmental_keywords = ["garden", "tree", "solar", "compost", "green", "plant", "recycl"]
+    social_keywords = ["market", "event", "gather", "art", "meet", "festival", "class"]
+    env_hits = sum(k in text for k in environmental_keywords)
+    social_hits = sum(k in text for k in social_keywords)
+    return {
+        "social_connectivity_pct": min(10 + social_hits * 15, 90),
+        "environmental_impact": "High Impact" if env_hits >= 1 else "Moderate Impact",
+    }
+
+
+def estimate_resources(idea_text: str) -> dict:
+    """
+    Give a rough budget/volunteer estimate for a pitched idea so the pitch
+    form has something to render before any real planning happens.
+    Returns: {"budget_min": int, "budget_max": int, "volunteers_min": int, "volunteers_max": int}
+
+    TODO (hackathon): replace this heuristic with a real LLM call.
+    """
+    scale = 1 + len(idea_text or "") // 200
+    return {
+        "budget_min": 300 * scale,
+        "budget_max": 800 * scale,
+        "volunteers_min": 3 * scale,
+        "volunteers_max": 6 * scale,
+    }
+
+
 def summarize_area_pattern(reports_in_area: list[dict]) -> str:
     """
     Given aggregated, anonymized reports for one map grid cell, ask an LLM

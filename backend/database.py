@@ -28,5 +28,25 @@ def init_db():
             created_at TEXT DEFAULT CURRENT_TIMESTAMP
         )
     """)
+    conn.execute("""
+        CREATE TABLE IF NOT EXISTS ideas (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            title TEXT NOT NULL,
+            description TEXT NOT NULL,
+            needs_volunteers INTEGER DEFAULT 0,
+            needs_mentor INTEGER DEFAULT 0,
+            needs_funding INTEGER DEFAULT 0,
+            est_budget_min REAL,
+            est_budget_max REAL,
+            volunteers_needed_min INTEGER,
+            volunteers_needed_max INTEGER,
+            social_connectivity_score TEXT,
+            environmental_impact TEXT,
+            support_count INTEGER DEFAULT 0,
+            volunteer_count INTEGER DEFAULT 0,
+            status TEXT DEFAULT 'published',
+            created_at TEXT DEFAULT CURRENT_TIMESTAMP
+        )
+    """)
     conn.commit()
     conn.close()

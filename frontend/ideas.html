@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LocalPulse - Idea Incubator</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header>
+    <h1>LocalPulse</h1>
+    <p>Report a concern or idea in your neighbourhood</p>
+    <nav>
+      <a href="index.html">Report</a>
+      <a href="dashboard.html">Planner dashboard</a>
+      <a href="ideas.html" class="active">Idea Incubator</a>
+    </nav>
+  </header>
+
+  <main class="ideas-main">
+    <div class="ideas-heading">
+      <h2>Idea Incubator</h2>
+      <p>Discover, support, and collaborate on fresh ideas pitched by your neighbours to improve our community spaces.</p>
+    </div>
+
+    <div class="ideas-toolbar">
+      <div class="sort-tabs" id="sort-tabs">
+        <button type="button" class="sort-tab active" data-sort="recent">Recent</button>
+        <button type="button" class="sort-tab" data-sort="most_supported">Most Supported</button>
+        <button type="button" class="sort-tab" data-sort="urgent">Urgent Needs</button>
+      </div>
+    </div>
+
+    <div class="ideas-grid" id="ideas-grid">
+      <!-- idea cards populated by ideas.js -->
+      <a class="idea-card idea-card--cta" href="pitch-idea.html">
+        <div class="idea-cta-icon">+</div>
+        <h3>Have a bright idea?</h3>
+        <p>Got a concept to improve our neighbourhood? Pitch it to the community and gather support.</p>
+        <span class="btn btn-primary">Pitch a New Idea</span>
+      </a>
+    </div>
+  </main>
+
+  <script src="js/ideas.js"></script>
+</body>
+</html>
