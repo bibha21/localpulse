@@ -6,11 +6,17 @@ body {
 }
 
 header {
-  padding: 28px 20px 18px;
+  box-sizing: border-box;
+  min-height: 220px;
+  padding: 24px 20px 22px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
   background:
-    linear-gradient(rgba(9, 41, 74, 0.78), rgba(9, 41, 74, 0.85)),
-    url("../assets/espoo-hero.svg") center / cover no-repeat;
+    linear-gradient(180deg, rgba(9, 41, 74, 0.28) 0%, rgba(9, 41, 74, 0.5) 45%, rgba(9, 41, 74, 0.9) 100%),
+    url("../assets/espoo-watertower-night.jpg") center 22% / cover no-repeat;
   color: white;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.55);
 }
 
 .header-top {
@@ -119,7 +125,8 @@ header nav a.active {
 /* --- Homepage hero --- */
 
 header.hero {
-  padding: 40px 20px 22px;
+  min-height: 380px;
+  padding: 40px 20px 26px;
 }
 
 .hero-brand {
@@ -1049,7 +1056,9 @@ main {
 }
 
 .cta-card {
-  background: #0c447c;
+  background:
+    linear-gradient(rgba(9, 41, 74, 0.68), rgba(12, 68, 124, 0.88)),
+    url("../assets/espoo-haltia.jpg") center 65% / cover no-repeat;
   color: white;
   text-align: center;
 }
@@ -1294,4 +1303,66 @@ main {
   justify-content: space-between;
   align-items: center;
   gap: 10px;
+}
+
+/* --- Site footer banner --- */
+
+.site-footer {
+  box-sizing: border-box;
+  min-height: 200px;
+  margin-top: 40px;
+  padding: 32px 20px 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    linear-gradient(180deg, rgba(9, 41, 74, 0.88) 0%, rgba(9, 41, 74, 0.55) 45%, rgba(9, 41, 74, 0.32) 100%),
+    url("../assets/espoo-haltia.jpg") center 40% / cover no-repeat;
+  color: white;
+  text-align: center;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.55);
+}
+
+.site-footer-inner {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.site-footer-brand {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0 0 8px;
+}
+
+.site-footer-tagline {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0 0 18px;
+  line-height: 1.5;
+}
+
+.site-footer-nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 18px;
+  margin-bottom: 16px;
+}
+
+.site-footer-nav a {
+  color: white;
+  opacity: 0.85;
+  text-decoration: none;
+  font-size: 13px;
+}
+
+.site-footer-nav a:hover {
+  opacity: 1;
+  text-decoration: underline;
+}
+
+.site-footer-copy {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0;
 }
