@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LocalPulse - Espoo | The Pulse</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header>
+    <span class="eyebrow">City of Espoo</span>
+    <h1>LocalPulse</h1>
+    <p>Your neighbourhood, at a glance</p>
+    <nav>
+      <a href="pulse.html" class="active">The Pulse</a>
+      <a href="index.html">Report</a>
+      <a href="dashboard.html">Planner dashboard</a>
+      <a href="ideas.html">Idea Incubator</a>
+      <a href="community.html">Community</a>
+    </nav>
+  </header>
+
+  <main class="pulse-main">
+    <div class="ideas-heading">
+      <h2 id="greeting">Good morning 👋</h2>
+      <p>Connect with neighbours, help shape Espoo, and make your neighbourhood more vibrant, inclusive and resilient.</p>
+    </div>
+
+    <div class="pulse-layout">
+      <div>
+        <section class="pulse-section">
+          <h3>📊 Neighbourhood Pulse</h3>
+          <p class="muted">Aggregated insights turning local activity into neighbourhood intelligence.</p>
+          <div class="overview-grid" id="overview-grid">
+            <!-- populated by pulse.js -->
+          </div>
+        </section>
+
+        <section class="pulse-section">
+          <h3>🔁 Community Exchange</h3>
+          <p class="muted">Share resources, swap skills, and build a more sustainable neighbourhood together.</p>
+          <p class="demo-banner">
+            🧪 <strong>Prototype scope.</strong> The four categories below are fixed for now, but "Share / Ask"
+            posts are real and saved - a production build would add browsing, replies and moderation.
+          </p>
+          <div class="exchange-grid" id="exchange-grid">
+            <!-- populated by pulse.js -->
+          </div>
+        </section>
+
+        <section class="pulse-section">
+          <div class="pulse-section-header">
+            <h3>🌱 Featured Initiatives</h3>
+            <a href="ideas.html">View All Ideas →</a>
+          </div>
+          <p class="muted">The most-supported ideas pitched by your neighbours right now.</p>
+          <div class="initiatives-grid" id="initiatives-grid">
+            <!-- populated by pulse.js -->
+          </div>
+        </section>
+      </div>
+
+      <aside>
+        <div class="card cta-card">
+          <div class="idea-cta-icon">🤝</div>
+          <h3>Shape Your Neighbourhood</h3>
+          <p>Every resident knows their neighbourhood best. Share your local knowledge, pitch an idea, or flag something that needs attention.</p>
+          <a href="pitch-idea.html" class="btn btn-primary">💡 Pitch an Idea</a>
+          <a href="index.html#report-form" class="btn btn-outline">⚠️ Report an Issue</a>
+        </div>
+
+        <div class="card">
+          <h3>Recent Activity</h3>
+          <p class="muted">What's happening around your neighbourhood.</p>
+          <div id="activity-feed">
+            <!-- populated by pulse.js -->
+          </div>
+          <a href="dashboard.html" class="activity-view-all">View All Activity →</a>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <dialog id="exchange-dialog" class="modal">
+    <form id="exchange-form" class="modal-form">
+      <h3>Share / Ask</h3>
+      <p class="muted" id="exchange-dialog-category">Garden Share</p>
+
+      <label for="exchange-title">Short title</label>
+      <input type="text" id="exchange-title" maxlength="120" placeholder="e.g., Free tomato seedlings" required />
+
+      <label for="exchange-description">What are you offering or looking for?</label>
+      <textarea id="exchange-description" maxlength="500" placeholder="Describe what you'd like to share or ask your neighbours for..." required></textarea>
+
+      <label for="exchange-contact">How should neighbours reach you? (optional)</label>
+      <input type="text" id="exchange-contact" maxlength="200" placeholder="e.g., an email address, or a note about where to find you" />
+
+      <div class="modal-actions">
+        <button type="button" id="exchange-cancel-btn" class="btn btn-outline">Cancel</button>
+        <button type="submit" class="btn btn-primary">Post to neighbours</button>
+      </div>
+      <div id="exchange-form-status" class="pitch-status"></div>
+    </form>
+  </dialog>
+
+  <script src="js/utils.js"></script>
+  <script src="js/pulse.js"></script>
+</body>
+</html>

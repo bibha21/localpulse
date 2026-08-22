@@ -40,6 +40,13 @@ def activity_level(report_count: int) -> str:
     return "High"
 
 
+def _parse_connectivity_pct(value) -> int:
+    try:
+        return int(str(value).strip().strip("%").lstrip("+"))
+    except (TypeError, ValueError):
+        return 0
+
+
 def _reports_by_area() -> dict[str, list[dict]]:
     conn = get_connection()
     rows = [dict(r) for r in conn.execute("SELECT * FROM reports").fetchall()]
@@ -169,3 +176,50 @@ def get_neighbourhood_pulse():
 
     pulses.sort(key=lambda p: p["report_count"], reverse=True)
     return pulses
+
+
+@router.get("/overview")
+def get_resident_overview():
+    """
+    Three-metric, city-wide snapshot for the resident-facing "Pulse" home
+    dashboard - lighter weight than /pulse (which is per-district) or
+    /patterns (which is per-grid-cell). Only aggregate counts leave this
+    endpoint, same privacy rule as the rest of this router.
+    """
+    conn = get_connection()
+    reports = [dict(r) for r in conn.execute("SELECT * FROM reports").fetchall()]
+    ideas = [dict(r) for r in conn.execute("SELECT * FROM ideas WHERE status = 'published'").fetchall()]
+    conn.close()
+
+    safety_reports = [r for r in reports if r["category"] == "safety"]
+    safety_needing_review = sum(1 for r in safety_reports if r["needs_review"])
+    if not safety_reports:
+        safety = {"status": "No reports yet", "detail": "No safety reports filed yet."}
+    elif safety_needing_review / len(safety_reports) >= 0.5:
+        safety = {
+            "status": "Needs Attention",
+            "detail": f"{safety_needing_review} of {len(safety_reports)} safety reports flagged for review.",
+        }
+    else:
+        safety = {
+            "status": "Improving",
+            "detail": f"{len(safety_reports)} safety report(s) filed, mostly resolved.",
+        }
+
+    green_ideas = [i for i in ideas if i["environmental_impact"] == "High Impact"]
+    greenspace = {
+        "status": "High Interest" if green_ideas else "Getting Started",
+        "detail": f"{len(green_ideas)} active green pitch(es)." if green_ideas
+        else "No green-space ideas pitched yet.",
+    }
+
+    if ideas:
+        avg_connectivity = sum(_parse_connectivity_pct(i["social_connectivity_score"]) for i in ideas) / len(ideas)
+        connectivity = {
+            "status": "Trending Up" if avg_connectivity >= 30 else "Building Momentum",
+            "detail": f"+{round(avg_connectivity)}% average social connectivity across {len(ideas)} idea(s).",
+        }
+    else:
+        connectivity = {"status": "No Activity Yet", "detail": "Pitch an idea to get started."}
+
+    return {"safety": safety, "greenspace": greenspace, "connectivity": connectivity}
