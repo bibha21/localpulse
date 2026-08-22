@@ -14,6 +14,16 @@ def get_connection():
     return conn
 
 
+REPORT_STATUSES = [
+    "submitted",
+    "received",
+    "under_review",
+    "assigned",
+    "action_planned",
+    "completed",
+]
+
+
 def init_db():
     conn = get_connection()
     conn.execute("""
@@ -25,9 +35,14 @@ def init_db():
             longitude REAL NOT NULL,
             confidence REAL,
             needs_review INTEGER DEFAULT 0,
+            status TEXT NOT NULL DEFAULT 'submitted',
             created_at TEXT DEFAULT CURRENT_TIMESTAMP
         )
     """)
+    # Backfill for databases created before the status column existed.
+    existing_columns = {row[1] for row in conn.execute("PRAGMA table_info(reports)")}
+    if "status" not in existing_columns:
+        conn.execute("ALTER TABLE reports ADD COLUMN status TEXT NOT NULL DEFAULT 'submitted'")
     conn.execute("""
         CREATE TABLE IF NOT EXISTS ideas (
             id INTEGER PRIMARY KEY AUTOINCREMENT,

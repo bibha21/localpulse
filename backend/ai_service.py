@@ -49,7 +49,10 @@ def estimate_resources(idea_text: str) -> dict:
     """
     Give a rough budget/volunteer estimate for a pitched idea so the pitch
     form has something to render before any real planning happens.
-    Returns: {"budget_min": int, "budget_max": int, "volunteers_min": int, "volunteers_max": int}
+    Budget figures are in euros (EUR) - City of Espoo grants and municipal
+    budgets are denominated in EUR.
+    Returns: {"budget_min": int, "budget_max": int, "currency": "EUR",
+              "volunteers_min": int, "volunteers_max": int}
 
     TODO (hackathon): replace this heuristic with a real LLM call.
     """
@@ -57,6 +60,7 @@ def estimate_resources(idea_text: str) -> dict:
     return {
         "budget_min": 300 * scale,
         "budget_max": 800 * scale,
+        "currency": "EUR",
         "volunteers_min": 3 * scale,
         "volunteers_max": 6 * scale,
     }

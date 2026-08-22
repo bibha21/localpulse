@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LocalPulse - Espoo | Community</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header>
+    <span class="eyebrow">City of Espoo</span>
+    <h1>LocalPulse</h1>
+    <p>Find people and initiatives in your Espoo neighbourhood</p>
+    <nav>
+      <a href="index.html">Report</a>
+      <a href="dashboard.html">Planner dashboard</a>
+      <a href="ideas.html">Idea Incubator</a>
+      <a href="community.html" class="active">Community</a>
+    </nav>
+  </header>
+
+  <main class="ideas-main">
+    <div class="ideas-heading">
+      <h2>Find People &amp; Community Initiatives</h2>
+      <p>Discover local associations, groups and activities near you, and reduce isolation by connecting with neighbours who share your interests.</p>
+    </div>
+
+    <p class="demo-banner">
+      🧪 <strong>Demo content.</strong> These are illustrative examples for the prototype, not real
+      Espoo organisations. A production build would connect to the City of Espoo's community and
+      association registries.
+    </p>
+
+    <div class="ideas-toolbar">
+      <div class="sort-tabs" id="category-tabs">
+        <button type="button" class="sort-tab active" data-category="all">All</button>
+      </div>
+      <input type="search" id="community-search" class="ideas-search" placeholder="Search by keyword..." />
+    </div>
+
+    <div class="ideas-grid" id="community-grid">
+      <!-- populated by community.js -->
+    </div>
+  </main>
+
+  <script src="js/utils.js"></script>
+  <script src="js/community.js"></script>
+</body>
+</html>

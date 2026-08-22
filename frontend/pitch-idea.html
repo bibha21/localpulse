@@ -3,17 +3,19 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>LocalPulse - Pitch Your Idea</title>
+  <title>LocalPulse - Espoo | Pitch Your Idea</title>
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
   <header>
+    <span class="eyebrow">City of Espoo</span>
     <h1>LocalPulse</h1>
-    <p>Report a concern or idea in your neighbourhood</p>
+    <p>Report a concern or idea in your Espoo neighbourhood</p>
     <nav>
       <a href="index.html">Report</a>
       <a href="dashboard.html">Planner dashboard</a>
       <a href="ideas.html" class="active">Idea Incubator</a>
+      <a href="community.html">Community</a>
     </nav>
   </header>
 
@@ -27,10 +29,11 @@
       <form id="pitch-form" class="pitch-form">
         <div class="card">
           <label for="title">Give your idea a short title</label>
-          <input type="text" id="title" placeholder="e.g., Community garden on 4th street" required />
+          <input type="text" id="title" placeholder="e.g., Community garden on 4th street" maxlength="120" required />
 
           <label for="description">Describe your idea in plain language</label>
-          <textarea id="description" placeholder="e.g., I think we should turn the empty lot on 4th street into a community garden. We could have raised beds and a composting area..." required></textarea>
+          <textarea id="description" placeholder="e.g., I think we should turn the empty lot on 4th street into a community garden. We could have raised beds and a composting area..." maxlength="2000" required></textarea>
+          <div class="muted" id="char-count">0 / 2000 characters</div>
 
           <div class="ai-status" id="ai-status">AI is listening and ready to refine your idea...</div>
         </div>

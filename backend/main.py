@@ -8,14 +8,21 @@ from fastapi.middleware.cors import CORSMiddleware
 from database import init_db
 from routers import reports, dashboard, ideas
 
-app = FastAPI(title="LocalPulse API")
+app = FastAPI(title="LocalPulse API - Espoo")
 
-# Allow the frontend (served separately) to call this API during the hackathon
+# Allow only the known local dev origins that serve the frontend - avoids
+# leaving the API open to any origin (CORS wildcard would let any website
+# read resident report data via a victim's browser).
+FRONTEND_ORIGINS = [
+    "http://localhost:5500",
+    "http://127.0.0.1:5500",
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # tighten before any real deployment
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_origins=FRONTEND_ORIGINS,
+    allow_methods=["GET", "POST"],
+    allow_headers=["Content-Type"],
 )
 
 app.include_router(reports.router, prefix="/api/reports", tags=["reports"])

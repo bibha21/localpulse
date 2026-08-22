@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from database import get_connection
 from ai_service import predict_impact, estimate_resources
@@ -14,8 +14,8 @@ SORT_COLUMNS = {
 
 
 class IdeaIn(BaseModel):
-    title: str
-    description: str
+    title: str = Field(min_length=1, max_length=120)
+    description: str = Field(min_length=1, max_length=2000)
     needs_volunteers: bool = False
     needs_mentor: bool = False
     needs_funding: bool = False
@@ -23,7 +23,7 @@ class IdeaIn(BaseModel):
 
 
 class IdeaPreviewIn(BaseModel):
-    description: str
+    description: str = Field(min_length=1, max_length=2000)
 
 
 @router.post("/preview")
