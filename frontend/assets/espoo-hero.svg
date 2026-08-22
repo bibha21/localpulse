@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 360" role="img" aria-labelledby="espooHeroTitle">
+  <title id="espooHeroTitle">Illustration of Espoo's coastline, archipelago and city skyline at dusk</title>
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0c447c" />
+      <stop offset="55%" stop-color="#3f7cb0" />
+      <stop offset="100%" stop-color="#f2b25c" />
+    </linearGradient>
+    <linearGradient id="sea" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#3a76a3" />
+      <stop offset="100%" stop-color="#1c4d70" />
+    </linearGradient>
+    <linearGradient id="glow" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffd58a" stop-opacity="0.55" />
+      <stop offset="100%" stop-color="#ffd58a" stop-opacity="0" />
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="360" fill="url(#sky)" />
+  <circle cx="960" cy="120" r="150" fill="url(#glow)" />
+  <circle cx="960" cy="120" r="46" fill="#ffe3ad" />
+
+  <!-- distant archipelago islands -->
+  <ellipse cx="140" cy="248" rx="120" ry="16" fill="#2f6088" opacity="0.6" />
+  <ellipse cx="430" cy="256" rx="90" ry="12" fill="#2f6088" opacity="0.5" />
+  <ellipse cx="1040" cy="252" rx="140" ry="14" fill="#2f6088" opacity="0.55" />
+
+  <!-- sea -->
+  <rect y="230" width="1200" height="130" fill="url(#sea)" />
+  <path d="M0 236 Q 60 226 120 236 T 240 236 T 360 236 T 480 236 T 600 236 T 720 236 T 840 236 T 960 236 T 1080 236 T 1200 236 V360 H0 Z" fill="#2c5f88" opacity="0.5" />
+
+  <!-- Keilaniemi-style skyline silhouette (Espoo's modern office towers) -->
+  <g fill="#0a2f52">
+    <rect x="120" y="150" width="26" height="100" />
+    <rect x="152" y="120" width="20" height="130" />
+    <rect x="178" y="165" width="30" height="85" />
+    <rect x="214" y="100" width="22" height="150" />
+    <polygon points="225,100 236,100 236,80 225,80" />
+    <rect x="242" y="140" width="18" height="110" />
+    <rect x="266" y="175" width="34" height="75" />
+    <rect x="308" y="130" width="24" height="120" />
+  </g>
+
+  <!-- windows -->
+  <g fill="#ffd58a" opacity="0.85">
+    <rect x="158" y="132" width="4" height="6" />
+    <rect x="158" y="150" width="4" height="6" />
+    <rect x="158" y="168" width="4" height="6" />
+    <rect x="220" y="112" width="4" height="6" />
+    <rect x="220" y="132" width="4" height="6" />
+    <rect x="220" y="152" width="4" height="6" />
+    <rect x="220" y="172" width="4" height="6" />
+    <rect x="315" y="145" width="4" height="6" />
+    <rect x="315" y="165" width="4" height="6" />
+  </g>
+
+  <!-- pine forest strip, referencing Espoo's wooded suburbs -->
+  <g fill="#123f2c">
+    <polygon points="720,250 736,205 752,250" />
+    <polygon points="745,250 763,195 781,250" />
+    <polygon points="775,250 790,215 805,250" />
+    <polygon points="805,250 824,200 843,250" />
+    <polygon points="835,250 850,220 865,250" />
+  </g>
+
+  <!-- water reflections -->
+  <g stroke="#ffe3ad" stroke-width="2" opacity="0.35">
+    <line x1="930" y1="270" x2="990" y2="270" />
+    <line x1="915" y1="286" x2="1005" y2="286" />
+    <line x1="940" y1="302" x2="980" y2="302" />
+  </g>
+
+  <text x="40" y="60" font-family="system-ui, sans-serif" font-size="34" font-weight="700" fill="#ffffff">Espoo</text>
+  <text x="40" y="86" font-family="system-ui, sans-serif" font-size="15" fill="#eaf1f8" opacity="0.9">Coastline, archipelago and city living side by side</text>
+</svg>

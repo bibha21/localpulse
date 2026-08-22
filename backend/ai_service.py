@@ -120,7 +120,10 @@ def estimate_resources(idea_text: str) -> dict:
     """
     Give a rough budget/volunteer estimate for a pitched idea so the pitch
     form has something to render before any real planning happens.
-    Returns: {"budget_min": int, "budget_max": int, "volunteers_min": int, "volunteers_max": int}
+    Budget figures are in euros (EUR) - City of Espoo grants and municipal
+    budgets are denominated in EUR.
+    Returns: {"budget_min": int, "budget_max": int, "currency": "EUR",
+              "volunteers_min": int, "volunteers_max": int}
 
     TODO (hackathon): replace this heuristic with a real LLM call.
     """
@@ -128,6 +131,7 @@ def estimate_resources(idea_text: str) -> dict:
     return {
         "budget_min": 300 * scale,
         "budget_max": 800 * scale,
+        "currency": "EUR",
         "volunteers_min": 3 * scale,
         "volunteers_max": 6 * scale,
     }
@@ -135,9 +139,14 @@ def estimate_resources(idea_text: str) -> dict:
 
 def summarize_area_pattern(reports_in_area: list[dict]) -> str:
     """
-    Given aggregated, anonymized reports for one map grid cell, ask an LLM
-    to produce a short, plain-language, non-stigmatizing summary for the
-    planner dashboard.
+    Given aggregated, anonymized reports for one map grid cell, produce a short,
+    plain-language, non-stigmatizing summary for the planner dashboard's
+    higher-level /pulse view (no LLM call - generate_area_insight below is the
+    on-demand, richer version used by /patterns).
+    """
+    if len(reports_in_area) < 3:
+        return "Low report volume - not enough signal yet."
+    return _stub_summarize(reports_in_area)["summary"]
 
 
 def generate_area_insight(area_location: str, reports_in_area: list[dict]) -> dict:

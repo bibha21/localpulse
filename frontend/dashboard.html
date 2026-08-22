@@ -3,12 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>LocalPulse - Planner dashboard</title>
+  <title>LocalPulse - Espoo | Planner dashboard</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
   <header>
+    <span class="eyebrow">City of Espoo · Planner view</span>
     <h1>LocalPulse - Planner view</h1>
     <p>Neighbourhood engagement patterns across Espoo</p>
     <nav class="site-nav">
@@ -20,17 +21,46 @@
       <a href="index.html">Report</a>
       <a href="dashboard.html" class="active">Planner dashboard</a>
       <a href="ideas.html">Idea Incubator</a>
+      <a href="community.html">Community</a>
     </nav>
   </header>
 
   <main>
+    <section id="pulse-section">
+      <h2>Neighbourhood Pulse</h2>
+      <p class="muted">A fast, district-level overview before drilling into the map below.</p>
+      <div id="pulse-cards" class="pulse-cards">
+        <!-- populated by dashboard.js -->
+      </div>
+    </section>
+
+    <div class="dashboard-toolbar">
+      <div class="legend">
+        <span><span class="dot" style="background:#0c447c"></span> Low review need</span>
+        <span><span class="dot" style="background:#E24B4A"></span> Higher review need</span>
+        <span>Circle size = report volume</span>
+      </div>
+      <label class="toggle-row">
+        <input type="checkbox" id="show-low-signal" />
+        Show low-signal areas (&lt; 3 reports)
+      </label>
+    </div>
+
     <div id="map"></div>
+
+    <p class="privacy-note">
+      🔒 This view only ever shows grid-cell or district-level aggregates - report
+      counts and a plain-language summary. No individual report's exact location or
+      note text is ever shown here.
+    </p>
+
     <div id="area-summaries">
       <!-- populated by dashboard.js -->
     </div>
   </main>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="js/utils.js"></script>
   <script src="js/dashboard.js"></script>
 </body>
 </html>

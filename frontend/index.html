@@ -3,42 +3,51 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>LocalPulse - Report a concern</title>
+  <title>LocalPulse - Espoo | Report a concern</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
-  <header>
+  <header class="hero">
     <div class="header-top">
-      <h1 data-i18n="title">LocalPulse</h1>
+      <span class="eyebrow">City of Espoo</span>
       <select id="language">
         <option value="en">English</option>
         <option value="fi">Suomi</option>
         <option value="sv">Svenska</option>
       </select>
     </div>
+    <p class="hero-brand" data-i18n="title">LocalPulse</p>
+    <h1>Your Neighbourhood. Your Voice. Your Espoo.</h1>
+    <p class="hero-subtitle">
+      Tell us what could make your neighbourhood safer, greener, more inclusive and more
+      vibrant. AI helps turn your experience into ideas and actions - together with your
+      community and the City of Espoo.
+    </p>
     <p data-i18n="subtitle">Report a concern or idea in your neighbourhood</p>
-    <nav class="site-nav">
-      <a href="index.html" class="active">Report a concern</a>
-      <a href="dashboard.html">Planner dashboard</a>
-      <a href="topics/topics.html">City topics</a>
-    </nav>
-    <h1>LocalPulse</h1>
-    <p>Report a concern or idea in your neighbourhood</p>
+    <div class="hero-ctas">
+      <a href="#report-form" class="hero-cta">📍 Report an Issue</a>
+      <a href="pitch-idea.html" class="hero-cta">💡 Share an Idea</a>
+      <a href="community.html" class="hero-cta">🤝 Find Community Activities</a>
+      <a href="dashboard.html" class="hero-cta">🗺️ Explore Neighbourhood Map</a>
+    </div>
     <nav>
       <a href="index.html" class="active">Report</a>
       <a href="dashboard.html">Planner dashboard</a>
       <a href="ideas.html">Idea Incubator</a>
+      <a href="community.html">Community</a>
+      <a href="topics/topics.html">City topics</a>
     </nav>
   </header>
 
   <main>
+    <button type="button" id="locate-btn" class="locate-btn">📍 Use my location</button>
     <div id="map"></div>
 
     <form id="report-form">
       <label for="note" data-i18n="noteLabel">What's going on?</label>
       <div class="note-row">
-        <textarea id="note" data-i18n-placeholder="notePlaceholder" placeholder="e.g. Broken streetlight on Otaniementie"></textarea>
+        <textarea id="note" data-i18n-placeholder="notePlaceholder" placeholder="e.g. Broken streetlight on Otaniementie" maxlength="1000"></textarea>
         <button type="button" id="voice-btn" data-i18n="voiceBtn">🎤 Voice</button>
       </div>
 
@@ -49,9 +58,24 @@
     </form>
 
     <div id="status"></div>
+
+    <p class="privacy-note">
+      🔒 Your report is used to spot neighbourhood patterns for City of Espoo planners.
+      Only aggregated, anonymised counts are shown on the planner dashboard - your exact
+      location and note are never displayed publicly.
+    </p>
+
+    <section id="my-reports-section">
+      <h2>You Reported It. What Happened?</h2>
+      <p class="muted">Reports you've submitted from this browser, and where they stand.</p>
+      <div id="my-reports">
+        <!-- populated by app.js -->
+      </div>
+    </section>
   </main>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="js/utils.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>

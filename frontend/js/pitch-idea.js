@@ -3,6 +3,7 @@ const API_BASE = "http://localhost:8000/api";
 const descriptionEl = document.getElementById("description");
 const aiStatusEl = document.getElementById("ai-status");
 const statusEl = document.getElementById("pitch-status");
+const charCountEl = document.getElementById("char-count");
 
 let previewTimer = null;
 
@@ -13,10 +14,14 @@ function updatePredictionPanels(data) {
   document.getElementById("impact-social").textContent = `+${impact.social_connectivity_pct}%`;
   document.getElementById("impact-environmental").textContent = impact.environmental_impact;
   document.getElementById("estimate-budget").textContent =
-    `$${resources.budget_min} - $${resources.budget_max}`;
+    `€${resources.budget_min} - €${resources.budget_max}`;
   document.getElementById("estimate-volunteers").textContent =
     `${resources.volunteers_min}-${resources.volunteers_max} people`;
 }
+
+descriptionEl.addEventListener("input", () => {
+  charCountEl.textContent = `${descriptionEl.value.length} / 2000 characters`;
+});
 
 async function refreshPreview() {
   const description = descriptionEl.value.trim();

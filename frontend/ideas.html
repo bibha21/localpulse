@@ -3,17 +3,19 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>LocalPulse - Idea Incubator</title>
+  <title>LocalPulse - Espoo | Idea Incubator</title>
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
   <header>
+    <span class="eyebrow">City of Espoo</span>
     <h1>LocalPulse</h1>
-    <p>Report a concern or idea in your neighbourhood</p>
+    <p>Report a concern or idea in your Espoo neighbourhood</p>
     <nav>
       <a href="index.html">Report</a>
       <a href="dashboard.html">Planner dashboard</a>
       <a href="ideas.html" class="active">Idea Incubator</a>
+      <a href="community.html">Community</a>
     </nav>
   </header>
 
@@ -29,6 +31,7 @@
         <button type="button" class="sort-tab" data-sort="most_supported">Most Supported</button>
         <button type="button" class="sort-tab" data-sort="urgent">Urgent Needs</button>
       </div>
+      <input type="search" id="ideas-search" class="ideas-search" placeholder="Search ideas by title or keyword..." />
     </div>
 
     <div class="ideas-grid" id="ideas-grid">
@@ -42,6 +45,7 @@
     </div>
   </main>
 
+  <script src="js/utils.js"></script>
   <script src="js/ideas.js"></script>
 </body>
 </html>
