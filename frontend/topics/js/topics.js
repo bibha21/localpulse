@@ -6,6 +6,45 @@ function escapeHtml(str) {
   return div.innerHTML;
 }
 
+// Renders an AI insight block: the cached summary/idea if one exists, or a
+// "Generate AI insight" button if not (insights are only computed on click,
+// never automatically on page load, to avoid spending Gemini quota on every reload).
+function renderInsight(container, { summary, actionableIdea, postUrl }) {
+  if (summary !== null && summary !== undefined) {
+    const ideaBlock = actionableIdea
+      ? `<div class="actionable-idea">💡 <strong>Idea:</strong> ${escapeHtml(actionableIdea)}</div>`
+      : "";
+    container.innerHTML = `<p>${escapeHtml(summary)}</p>${ideaBlock}`;
+    return;
+  }
+  if (!postUrl) {
+    container.innerHTML = "";
+    return;
+  }
+  container.innerHTML = `<button type="button" class="generate-insight-btn">🤖 Generate AI insight</button>`;
+  container.querySelector(".generate-insight-btn").addEventListener("click", async (e) => {
+    const btn = e.target;
+    btn.disabled = true;
+    btn.textContent = "Generating...";
+    try {
+      const res = await fetch(postUrl, { method: "POST" });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      const ideaBlock = data.actionable_idea
+        ? `<div class="actionable-idea">💡 <strong>Idea:</strong> ${escapeHtml(data.actionable_idea)}</div>`
+        : "";
+      const note = data.source === "fallback"
+        ? `<p><small>(AI unavailable right now - showing an automatic summary instead)</small></p>`
+        : "";
+      container.innerHTML = `<p>${escapeHtml(data.summary)}</p>${ideaBlock}${note}`;
+    } catch (err) {
+      btn.disabled = false;
+      btn.textContent = "🤖 Generate AI insight";
+      console.error(err);
+    }
+  });
+}
+
 async function loadTopics() {
   const container = document.getElementById("topics");
   const res = await fetch(`${API_BASE}/topics/`);
@@ -19,10 +58,6 @@ async function loadTopics() {
     const breakdown = Object.entries(topic.sentiment_breakdown)
       .map(([sentiment, count]) => `<span class="sentiment-badge sentiment-${escapeHtml(sentiment)}">${escapeHtml(sentiment)}: ${count}</span>`)
       .join("");
-
-    const ideaBlock = topic.actionable_idea
-      ? `<div class="actionable-idea">💡 <strong>Idea:</strong> ${escapeHtml(topic.actionable_idea)}</div>`
-      : "";
 
     const commentItems = topic.comments
       .map(
@@ -40,8 +75,7 @@ async function loadTopics() {
       <div class="area">${escapeHtml(topic.area)} · ${topic.comment_count} comment(s)</div>
       <p>${escapeHtml(topic.description)}</p>
       <div class="sentiment-breakdown">${breakdown}</div>
-      <p>${escapeHtml(topic.summary)}</p>
-      ${ideaBlock}
+      <div class="insight-block"></div>
       <form class="comment-form" data-topic-id="${topic.id}">
         <textarea placeholder="Share your feedback or concern..." required></textarea>
         <button type="submit">Submit</button>
@@ -49,6 +83,12 @@ async function loadTopics() {
       <div class="comment-status"></div>
       <ul class="comment-list">${commentItems}</ul>
     `;
+
+    renderInsight(card.querySelector(".insight-block"), {
+      summary: topic.summary,
+      actionableIdea: topic.actionable_idea,
+      postUrl: topic.comment_count >= 3 ? `${API_BASE}/topics/${topic.id}/insight` : null,
+    });
 
     card.querySelector(".comment-form").addEventListener("submit", async (e) => {
       e.preventDefault();

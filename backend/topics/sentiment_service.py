@@ -103,31 +103,24 @@ Rules:
   language, but respond in English.
 """
 
-_topic_summary_cache: dict[str, dict] = {}
-
-
-def summarize_topic_feedback(topic_title: str, comments: list[dict]) -> dict:
+def generate_topic_insight(topic_title: str, comments: list[dict]) -> dict:
     """
     Given all feedback comments on one topic, produce a balanced summary plus a concrete
-    next step for the city. Returns: {"summary": str, "actionable_idea": str | None}
+    next step for the city. Returns: {"summary": str, "actionable_idea": str | None, "source": "ai" | "fallback"}
 
-    Cached by the exact set of comment ids, for the same reason as the area-pattern
-    cache in ai_service.py - free-tier quota is small and shouldn't be re-spent on
-    unchanged data every time the topics list is loaded.
+    Only called on demand (a planner clicking "Generate AI insight") - the caller
+    (topics/router.py) persists successful ("ai") results via database.set_cached_summary,
+    so the same comment set never re-spends quota once generated.
     """
     if len(comments) < 3:
-        return {"summary": "Not enough feedback yet to summarize.", "actionable_idea": None}
+        return {"summary": "Not enough feedback yet to summarize.", "actionable_idea": None, "source": "fallback"}
 
     breakdown: dict[str, int] = {}
     for c in comments:
         breakdown[c["sentiment"]] = breakdown.get(c["sentiment"], 0) + 1
 
-    cache_key = f"{topic_title}:{','.join(str(c['id']) for c in sorted(comments, key=lambda c: c['id']))}"
-    if cache_key in _topic_summary_cache:
-        return _topic_summary_cache[cache_key]
-
     if not _client:
-        return _stub_topic_summary(breakdown, len(comments))
+        return {**_stub_topic_summary(breakdown, len(comments)), "source": "fallback"}
 
     comments_block = "\n".join(f"- ({c['sentiment']}) {c['comment_text']}" for c in comments[:20])
     prompt = _TOPIC_SUMMARY_PROMPT.format(
@@ -142,16 +135,14 @@ def summarize_topic_feedback(topic_title: str, comments: list[dict]) -> dict:
         raw = response.text.strip().removeprefix("```json").removeprefix("```").removesuffix("```").strip()
         result = json.loads(raw)
         stub = _stub_topic_summary(breakdown, len(comments))
-        parsed = {
+        return {
             "summary": result.get("summary", stub["summary"]),
             "actionable_idea": result.get("actionable_idea"),
+            "source": "ai",
         }
-        _topic_summary_cache[cache_key] = parsed
-        return parsed
     except Exception as exc:
-        # Not cached: a transient failure should be retried next load, not stuck as a stub.
         print(f"Gemini topic summary failed, falling back to stub: {exc}")
-        return _stub_topic_summary(breakdown, len(comments))
+        return {**_stub_topic_summary(breakdown, len(comments)), "source": "fallback"}
 
 
 def _stub_topic_summary(breakdown: dict, count: int) -> dict:

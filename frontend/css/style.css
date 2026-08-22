@@ -133,3 +133,18 @@ main {
   border-radius: 4px;
   font-size: 14px;
 }
+
+.generate-insight-btn {
+  background: white;
+  color: #0c447c;
+  border: 1px solid #0c447c;
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.generate-insight-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

@@ -28,5 +28,45 @@ def init_db():
             created_at TEXT DEFAULT CURRENT_TIMESTAMP
         )
     """)
+    # Shared cache for on-demand AI insights (area patterns, topic feedback, ...) so a
+    # generated insight survives server restarts and isn't re-requested from Gemini for
+    # the same underlying data - the free-tier quota is small and insights are only
+    # generated when a planner explicitly clicks "Generate AI insight".
+    conn.execute("""
+        CREATE TABLE IF NOT EXISTS ai_summary_cache (
+            cache_key TEXT PRIMARY KEY,
+            summary TEXT NOT NULL,
+            actionable_idea TEXT,
+            created_at TEXT DEFAULT CURRENT_TIMESTAMP
+        )
+    """)
+    conn.commit()
+    conn.close()
+
+
+def get_cached_summary(cache_key: str) -> dict | None:
+    conn = get_connection()
+    row = conn.execute(
+        "SELECT summary, actionable_idea FROM ai_summary_cache WHERE cache_key = ?",
+        (cache_key,),
+    ).fetchone()
+    conn.close()
+    if row is None:
+        return None
+    return {"summary": row["summary"], "actionable_idea": row["actionable_idea"]}
+
+
+def set_cached_summary(cache_key: str, summary: str, actionable_idea: str | None) -> None:
+    conn = get_connection()
+    conn.execute(
+        """
+        INSERT INTO ai_summary_cache (cache_key, summary, actionable_idea)
+        VALUES (?, ?, ?)
+        ON CONFLICT(cache_key) DO UPDATE SET
+            summary = excluded.summary,
+            actionable_idea = excluded.actionable_idea
+        """,
+        (cache_key, summary, actionable_idea),
+    )
     conn.commit()
     conn.close()

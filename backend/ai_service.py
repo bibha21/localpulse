@@ -99,28 +99,22 @@ Rules:
 """
 
 
-_pattern_cache: dict[str, dict] = {}
-
-
-def summarize_area_pattern(area_location: str, reports_in_area: list[dict]) -> dict:
+def generate_area_insight(area_location: str, reports_in_area: list[dict]) -> dict:
     """
     Given aggregated reports for one area, produce a short, non-stigmatizing summary
     plus a concrete actionable idea a planner could act on.
-    Returns: {"summary": str, "actionable_idea": str | None}
+    Returns: {"summary": str, "actionable_idea": str | None, "source": "ai" | "fallback"}
 
-    Results are cached by the exact set of report ids in the area, since the free-tier
-    Gemini quota is small (20 requests/day) and the dashboard can be reloaded often -
-    identical report data shouldn't trigger a fresh call every time.
+    This is only called on demand (a planner clicking "Generate AI insight"), not on
+    every dashboard load - the caller (routers/dashboard.py) is responsible for
+    persisting successful ("ai") results via database.set_cached_summary, so the same
+    report set never re-spends quota once generated.
     """
     if len(reports_in_area) < 3:
-        return {"summary": "Low report volume - not enough signal yet.", "actionable_idea": None}
-
-    cache_key = f"{area_location}:{','.join(str(r['id']) for r in sorted(reports_in_area, key=lambda r: r['id']))}"
-    if cache_key in _pattern_cache:
-        return _pattern_cache[cache_key]
+        return {"summary": "Low report volume - not enough signal yet.", "actionable_idea": None, "source": "fallback"}
 
     if not _client:
-        return _stub_summarize(reports_in_area)
+        return {**_stub_summarize(reports_in_area), "source": "fallback"}
 
     categories: dict[str, int] = {}
     for r in reports_in_area:
@@ -141,17 +135,14 @@ def summarize_area_pattern(area_location: str, reports_in_area: list[dict]) -> d
         raw = response.text.strip().removeprefix("```json").removeprefix("```").removesuffix("```").strip()
         result = json.loads(raw)
         stub = _stub_summarize(reports_in_area)
-        parsed = {
+        return {
             "summary": result.get("summary", stub["summary"]),
             "actionable_idea": result.get("actionable_idea"),
+            "source": "ai",
         }
-        _pattern_cache[cache_key] = parsed
-        return parsed
     except Exception as exc:
-        # Not cached: a transient failure (e.g. hitting the free-tier rate limit)
-        # should be retried on the next load rather than permanently stuck as a stub.
         print(f"Gemini pattern summary failed, falling back to stub: {exc}")
-        return _stub_summarize(reports_in_area)
+        return {**_stub_summarize(reports_in_area), "source": "fallback"}
 
 
 def _stub_summarize(reports_in_area: list[dict]) -> dict:
