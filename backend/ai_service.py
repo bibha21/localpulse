@@ -14,7 +14,14 @@ from google.genai import types
 load_dotenv()
 
 _api_key = os.environ.get("GEMINI_API_KEY")
-_client = genai.Client(api_key=_api_key) if _api_key else None
+# Gemini's free tier occasionally returns transient 503s under high demand. The SDK's
+# default retry policy (5 attempts, up to 60s backoff each) can take minutes to give up -
+# too slow for a live demo. Fail over to the stub classifier quickly instead.
+_http_options = types.HttpOptions(
+    timeout=10_000,  # ms per request
+    retry_options=types.HttpRetryOptions(attempts=2, initial_delay=1, max_delay=3),
+)
+_client = genai.Client(api_key=_api_key, http_options=_http_options) if _api_key else None
 
 CATEGORIES = ["infrastructure", "safety", "cleanliness", "accessibility", "other"]
 
@@ -48,7 +55,7 @@ def classify_report(photo_bytes: bytes | None, text_note: str | None) -> dict:
         parts.append(types.Part.from_bytes(data=photo_bytes, mime_type="image/jpeg"))
 
     try:
-        response = _client.models.generate_content(model="gemini-3.6-flash", contents=parts)
+        response = _client.models.generate_content(model="gemini-flash-latest", contents=parts)
         raw = response.text.strip().removeprefix("```json").removeprefix("```").removesuffix("```").strip()
         result = json.loads(raw)
         return {
@@ -68,19 +75,92 @@ def _stub_classify(text_note: str | None) -> dict:
     return {"category": "other", "confidence": 0.4, "needs_review": True}
 
 
-def summarize_area_pattern(reports_in_area: list[dict]) -> str:
-    """
-    Given aggregated, anonymized reports for one map grid cell, ask an LLM
-    to produce a short, plain-language, non-stigmatizing summary for the
-    planner dashboard.
+_PATTERN_PROMPT = """You are helping a city planner spot patterns in resident reports for one
+neighbourhood area, and turn them into a concrete next step - not just a description.
 
-    TODO (hackathon): replace with a real LLM call. Keep the prompt framed
-    around "may benefit from attention" - never "at risk" / "segregated".
+Area: {location}
+Report count: {count}
+Category breakdown: {categories}
+
+Resident-submitted descriptions in this area:
+{descriptions}
+
+Produce a JSON object (no markdown fences) with this shape:
+{{"summary": "<one plain-language sentence describing the pattern>", "actionable_idea": "<one concrete, specific, low-cost intervention a planner could act on>"}}
+
+Rules:
+- Frame the area as "may benefit from attention/investment" - never "at risk" or "segregated"
+  (avoid stigmatizing language on a public-facing dashboard).
+- The actionable_idea must be grounded in what residents actually described (e.g. a specific
+  fix, a community event type, a signage/lighting/maintenance change) - not generic advice
+  like "increase community engagement".
+- Descriptions may be in Finnish, Swedish, or English - understand them in their original
+  language, but respond in English.
+"""
+
+
+_pattern_cache: dict[str, dict] = {}
+
+
+def summarize_area_pattern(area_location: str, reports_in_area: list[dict]) -> dict:
+    """
+    Given aggregated reports for one area, produce a short, non-stigmatizing summary
+    plus a concrete actionable idea a planner could act on.
+    Returns: {"summary": str, "actionable_idea": str | None}
+
+    Results are cached by the exact set of report ids in the area, since the free-tier
+    Gemini quota is small (20 requests/day) and the dashboard can be reloaded often -
+    identical report data shouldn't trigger a fresh call every time.
     """
     if len(reports_in_area) < 3:
-        return "Low report volume - not enough signal yet."
-    categories = {}
+        return {"summary": "Low report volume - not enough signal yet.", "actionable_idea": None}
+
+    cache_key = f"{area_location}:{','.join(str(r['id']) for r in sorted(reports_in_area, key=lambda r: r['id']))}"
+    if cache_key in _pattern_cache:
+        return _pattern_cache[cache_key]
+
+    if not _client:
+        return _stub_summarize(reports_in_area)
+
+    categories: dict[str, int] = {}
+    for r in reports_in_area:
+        categories[r["category"]] = categories.get(r["category"], 0) + 1
+
+    descriptions = [r["description"] for r in reports_in_area if r.get("description")]
+    descriptions_block = "\n".join(f"- {d}" for d in descriptions[:15]) or "(no descriptions)"
+
+    prompt = _PATTERN_PROMPT.format(
+        location=area_location,
+        count=len(reports_in_area),
+        categories=categories,
+        descriptions=descriptions_block,
+    )
+
+    try:
+        response = _client.models.generate_content(model="gemini-flash-latest", contents=[prompt])
+        raw = response.text.strip().removeprefix("```json").removeprefix("```").removesuffix("```").strip()
+        result = json.loads(raw)
+        stub = _stub_summarize(reports_in_area)
+        parsed = {
+            "summary": result.get("summary", stub["summary"]),
+            "actionable_idea": result.get("actionable_idea"),
+        }
+        _pattern_cache[cache_key] = parsed
+        return parsed
+    except Exception as exc:
+        # Not cached: a transient failure (e.g. hitting the free-tier rate limit)
+        # should be retried on the next load rather than permanently stuck as a stub.
+        print(f"Gemini pattern summary failed, falling back to stub: {exc}")
+        return _stub_summarize(reports_in_area)
+
+
+def _stub_summarize(reports_in_area: list[dict]) -> dict:
+    """Fallback used when GEMINI_API_KEY is missing or the API call fails."""
+    categories: dict[str, int] = {}
     for r in reports_in_area:
         categories[r["category"]] = categories.get(r["category"], 0) + 1
     top = max(categories, key=categories.get)
-    return f"{len(reports_in_area)} reports in this area, mostly about {top}. May benefit from attention."
+    return {
+        "summary": f"{len(reports_in_area)} reports in this area, mostly about {top}. May benefit from attention.",
+        "actionable_idea": None,
+    }

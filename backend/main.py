@@ -7,6 +7,8 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from database import init_db
 from routers import reports, dashboard
+from topics.database import init_topics_db
+from topics.router import router as topics_router
 
 app = FastAPI(title="LocalPulse API")
 
@@ -20,11 +22,13 @@ app.add_middleware(
 
 app.include_router(reports.router, prefix="/api/reports", tags=["reports"])
 app.include_router(dashboard.router, prefix="/api/dashboard", tags=["dashboard"])
+app.include_router(topics_router, prefix="/api/topics", tags=["topics"])
 
 
 @app.on_event("startup")
 def on_startup():
     init_db()
+    init_topics_db()
 
 
 @app.get("/api/health")

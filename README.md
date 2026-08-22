@@ -5,11 +5,6 @@
 ## Selected challenge
 AI Community & Neighbourhood Engagement Assistant
 
-## Team
-- [Name 1]
-- [Name 2]
-- [Name 3]
-
 ## Problem
 Residents' concerns and ideas about their neighbourhood often go unheard or get lost in slow, disconnected municipal channels. Meanwhile, city planners typically rely on infrequent surveys to understand where socio-spatial disparities and segregation risk are emerging — by the time a problem is visible in the data, it may already be a crisis. There is no fast, low-friction way for residents to report issues and pitch ideas, and no real-time way for planners to see where engagement is breaking down.
 
@@ -45,7 +40,7 @@ A working prototype with two core flows:
 ```bash
 # Backend
 cd backend
-python -m venv venv && source venv/bin/activate  # or venv\Scripts\activate on Windows
+python3 -m venv venv && source venv/bin/activate  # or venv\Scripts\activate on Windows
 pip install -r requirements.txt
 cp ../.env.example ../.env   # then fill in your API key
 uvicorn main:app --reload
@@ -53,7 +48,7 @@ uvicorn main:app --reload
 
 # Frontend (in a separate terminal)
 cd frontend
-python -m http.server 5500
+python3 -m http.server 5500
 # Open http://localhost:5500/index.html (resident view)
 # and http://localhost:5500/dashboard.html (planner view)
 ```

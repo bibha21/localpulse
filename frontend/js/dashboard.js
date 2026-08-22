@@ -46,11 +46,15 @@ async function loadAreaSummaries() {
           </li>`
       )
       .join("");
+    const ideaBlock = area.actionable_idea
+      ? `<div class="actionable-idea">💡 <strong>Idea:</strong> ${escapeHtml(area.actionable_idea)}</div>`
+      : "";
     card.innerHTML = `
       <strong title="grid ${escapeHtml(area.area)}">${escapeHtml(area.location)}</strong> - <span class="area-toggle" style="cursor: pointer; text-decoration: underline;">${area.report_count} reports</span><br>
       ${breakdown}<br>
       ${area.needs_review_count} report(s) flagged for review<br>
       ${area.summary}
+      ${ideaBlock}
       <ul class="report-list" style="display: none;">${reportList}</ul>
     `;
     card.querySelector(".area-toggle").addEventListener("click", () => {

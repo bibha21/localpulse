@@ -60,6 +60,25 @@ header p {
   opacity: 0.9;
 }
 
+.site-nav {
+  margin-top: 8px;
+  display: flex;
+  gap: 16px;
+}
+
+.site-nav a {
+  color: white;
+  opacity: 0.8;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.site-nav a.active,
+.site-nav a:hover {
+  opacity: 1;
+  text-decoration: underline;
+}
+
 main {
   padding: 16px;
   max-width: 600px;
@@ -104,4 +123,13 @@ main {
   border-radius: 8px;
   padding: 12px;
   margin-bottom: 10px;
+}
+
+.actionable-idea {
+  margin-top: 8px;
+  padding: 8px 10px;
+  background: #fff6e0;
+  border-left: 3px solid #e0a800;
+  border-radius: 4px;
+  font-size: 14px;
 }

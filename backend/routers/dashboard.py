@@ -37,14 +37,17 @@ def get_area_patterns():
 
         avg_lat = sum(r["latitude"] for r in reports) / len(reports)
         avg_lon = sum(r["longitude"] for r in reports) / len(reports)
+        location = reverse_geocode_label(avg_lat, avg_lon)
+        pattern = summarize_area_pattern(location, reports)
 
         result.append({
             "area": key,
-            "location": reverse_geocode_label(avg_lat, avg_lon),
+            "location": location,
             "report_count": len(reports),
             "categories": categories,
             "needs_review_count": needs_review_count,
-            "summary": summarize_area_pattern(reports),
+            "summary": pattern["summary"],
+            "actionable_idea": pattern["actionable_idea"],
             "reports": [
                 {
                     "id": r["id"],
