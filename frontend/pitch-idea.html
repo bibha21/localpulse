@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LocalPulse - Pitch Your Idea</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header>
+    <h1>LocalPulse</h1>
+    <p>Report a concern or idea in your neighbourhood</p>
+    <nav>
+      <a href="index.html">Report</a>
+      <a href="dashboard.html">Planner dashboard</a>
+      <a href="ideas.html" class="active">Idea Incubator</a>
+    </nav>
+  </header>
+
+  <main class="pitch-main">
+    <div class="ideas-heading">
+      <h2>Pitch Your Idea</h2>
+      <p>Don't worry about perfect phrasing. Describe your vision, and our AI will help refine it into an actionable community proposal.</p>
+    </div>
+
+    <div class="pitch-layout">
+      <form id="pitch-form" class="pitch-form">
+        <div class="card">
+          <label for="title">Give your idea a short title</label>
+          <input type="text" id="title" placeholder="e.g., Community garden on 4th street" required />
+
+          <label for="description">Describe your idea in plain language</label>
+          <textarea id="description" placeholder="e.g., I think we should turn the empty lot on 4th street into a community garden. We could have raised beds and a composting area..." required></textarea>
+
+          <div class="ai-status" id="ai-status">AI is listening and ready to refine your idea...</div>
+        </div>
+
+        <div class="card">
+          <h3>Collaboration Needs</h3>
+          <p class="muted">What kind of support are you looking for?</p>
+          <label class="checkbox-row">
+            <input type="checkbox" id="needs-volunteers" /> Looking for volunteers
+          </label>
+          <label class="checkbox-row">
+            <input type="checkbox" id="needs-mentor" /> Need a mentor/expert advice
+          </label>
+          <label class="checkbox-row">
+            <input type="checkbox" id="needs-funding" /> Seeking funding/grants
+          </label>
+        </div>
+      </form>
+
+      <aside class="pitch-sidebar">
+        <div class="card">
+          <h3>Impact Prediction</h3>
+          <p class="muted">Based on similar community projects.</p>
+          <div class="stat-row">
+            <span>Social Connectivity</span>
+            <span class="pill pill-blue" id="impact-social">-</span>
+          </div>
+          <div class="stat-row">
+            <span>Environmental</span>
+            <span class="pill pill-green" id="impact-environmental">-</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Resource Estimation</h3>
+          <p class="muted">Preliminary estimates to help you plan.</p>
+          <div class="estimate-box">
+            <span>Est. Budget</span>
+            <strong id="estimate-budget">-</strong>
+          </div>
+          <div class="estimate-box">
+            <span>Volunteers Needed</span>
+            <strong id="estimate-volunteers">-</strong>
+          </div>
+        </div>
+
+        <div class="pitch-actions">
+          <button type="button" id="save-draft" class="btn btn-outline">Save Draft</button>
+          <button type="submit" form="pitch-form" id="publish" class="btn btn-primary">Publish to Incubator</button>
+        </div>
+
+        <div id="pitch-status" class="pitch-status"></div>
+      </aside>
+    </div>
+  </main>
+
+  <script src="js/pitch-idea.js"></script>
+</body>
+</html>

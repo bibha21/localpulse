@@ -28,6 +28,26 @@ def init_db():
             created_at TEXT DEFAULT CURRENT_TIMESTAMP
         )
     """)
+    conn.execute("""
+        CREATE TABLE IF NOT EXISTS ideas (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            title TEXT NOT NULL,
+            description TEXT NOT NULL,
+            needs_volunteers INTEGER DEFAULT 0,
+            needs_mentor INTEGER DEFAULT 0,
+            needs_funding INTEGER DEFAULT 0,
+            est_budget_min REAL,
+            est_budget_max REAL,
+            volunteers_needed_min INTEGER,
+            volunteers_needed_max INTEGER,
+            social_connectivity_score TEXT,
+            environmental_impact TEXT,
+            support_count INTEGER DEFAULT 0,
+            volunteer_count INTEGER DEFAULT 0,
+            status TEXT DEFAULT 'published',
+            created_at TEXT DEFAULT CURRENT_TIMESTAMP
+        )
+    """)
     # Shared cache for on-demand AI insights (area patterns, topic feedback, ...) so a
     # generated insight survives server restarts and isn't re-requested from Gemini for
     # the same underlying data - the free-tier quota is small and insights are only

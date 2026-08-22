@@ -79,6 +79,30 @@ header p {
   text-decoration: underline;
 }
 
+header nav {
+  margin-top: 10px;
+  display: flex;
+  gap: 16px;
+}
+
+header nav a {
+  color: white;
+  opacity: 0.75;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+header nav a:hover {
+  opacity: 1;
+}
+
+header nav a.active {
+  opacity: 1;
+  font-weight: 600;
+  border-bottom: 2px solid white;
+  padding-bottom: 2px;
+}
+
 main {
   padding: 16px;
   max-width: 600px;
@@ -147,4 +171,271 @@ main {
 .generate-insight-btn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+}
+
+/* --- Idea Incubator --- */
+
+.ideas-main,
+.pitch-main {
+  max-width: 1100px;
+}
+
+.ideas-heading h2 {
+  margin: 0 0 6px;
+  color: #0c447c;
+}
+
+.ideas-heading p {
+  margin: 0 0 20px;
+  color: #555;
+}
+
+.ideas-toolbar {
+  margin-bottom: 20px;
+}
+
+.sort-tabs {
+  display: flex;
+  gap: 8px;
+}
+
+.sort-tab {
+  border: 1px solid #d7dde3;
+  background: white;
+  border-radius: 999px;
+  padding: 8px 16px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.sort-tab.active {
+  background: #0c447c;
+  border-color: #0c447c;
+  color: white;
+}
+
+.ideas-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.idea-card {
+  background: white;
+  border: 1px solid #e5e9ed;
+  border-radius: 10px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.idea-card h3 {
+  margin: 0;
+  font-size: 17px;
+}
+
+.idea-card p {
+  margin: 0;
+  font-size: 14px;
+  color: #555;
+  flex-grow: 1;
+}
+
+.idea-badge {
+  display: inline-block;
+  background: #e6f0fa;
+  color: #0c447c;
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+
+.idea-meta {
+  display: flex;
+  gap: 16px;
+  font-size: 13px;
+  color: #666;
+}
+
+.idea-card-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.idea-card--cta {
+  background: #0c447c;
+  color: white;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+  text-decoration: none;
+}
+
+.idea-card--cta h3 {
+  color: white;
+}
+
+.idea-card--cta p {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.idea-cta-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  margin: 0 auto;
+}
+
+.btn {
+  display: inline-block;
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-size: 14px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  text-decoration: none;
+  text-align: center;
+}
+
+.btn-primary {
+  background: #0c447c;
+  color: white;
+}
+
+.btn-outline {
+  background: white;
+  border-color: #0c447c;
+  color: #0c447c;
+}
+
+/* --- Pitch Your Idea form --- */
+
+.pitch-layout {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 20px;
+  align-items: start;
+}
+
+.card {
+  background: white;
+  border: 1px solid #e5e9ed;
+  border-radius: 10px;
+  padding: 18px;
+  margin-bottom: 16px;
+}
+
+.card h3 {
+  margin: 0 0 4px;
+}
+
+.card .muted {
+  margin: 0 0 12px;
+  color: #777;
+  font-size: 13px;
+}
+
+.pitch-form label {
+  display: block;
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+
+.pitch-form input[type="text"],
+.pitch-form textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #d7dde3;
+  border-radius: 8px;
+  margin-bottom: 14px;
+}
+
+.pitch-form textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.ai-status {
+  font-size: 13px;
+  color: #0c447c;
+  background: #eef4fa;
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: normal;
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+.stat-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  padding: 8px 0;
+}
+
+.pill {
+  border-radius: 999px;
+  padding: 3px 10px;
+  font-size: 12px;
+}
+
+.pill-blue {
+  background: #e6f0fa;
+  color: #0c447c;
+}
+
+.pill-green {
+  background: #e4f3e6;
+  color: #1c7a30;
+}
+
+.estimate-box {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  border: 1px solid #eef1f4;
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin-bottom: 10px;
+  font-size: 13px;
+  color: #555;
+}
+
+.estimate-box strong {
+  font-size: 18px;
+  color: #0c447c;
+}
+
+.pitch-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.pitch-status {
+  margin-top: 10px;
+  font-size: 13px;
+  color: #333;
+}
+
+@media (max-width: 800px) {
+  .pitch-layout {
+    grid-template-columns: 1fr;
+  }
 }
