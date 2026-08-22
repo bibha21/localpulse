@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LocalPulse - Espoo | Community Exchange</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header>
+    <span class="eyebrow">City of Espoo</span>
+    <h1>LocalPulse</h1>
+    <p>Community Exchange</p>
+    <nav>
+      <a href="pulse.html">The Pulse</a>
+      <a href="index.html">Report</a>
+      <a href="dashboard.html">Planner dashboard</a>
+      <a href="ideas.html">Idea Incubator</a>
+      <a href="community.html">Community</a>
+    </nav>
+  </header>
+
+  <main class="ideas-main">
+    <a href="pulse.html" class="back-link">← Back to The Pulse</a>
+
+    <div class="ideas-heading">
+      <h2 id="exchange-posts-title">Community Exchange</h2>
+      <p id="exchange-posts-subtitle"></p>
+    </div>
+
+    <div class="card rewards-card" id="rewards-card">
+      <!-- populated by exchange-posts.js -->
+    </div>
+
+    <div class="ideas-toolbar">
+      <button type="button" id="exchange-posts-new-btn" class="btn btn-primary">+ Share / Ask</button>
+    </div>
+
+    <div id="exchange-posts-list">
+      <!-- populated by exchange-posts.js -->
+    </div>
+  </main>
+
+  <dialog id="exchange-dialog" class="modal">
+    <form id="exchange-form" class="modal-form">
+      <h3>Share / Ask</h3>
+      <p class="muted" id="exchange-dialog-category">Garden Share</p>
+
+      <label for="exchange-title">Short title</label>
+      <input type="text" id="exchange-title" maxlength="120" placeholder="e.g., Free tomato seedlings" required />
+
+      <label for="exchange-description">What are you offering or looking for?</label>
+      <textarea id="exchange-description" maxlength="500" placeholder="Describe what you'd like to share or ask your neighbours for..." required></textarea>
+
+      <label for="exchange-contact">How should neighbours reach you? (optional)</label>
+      <input type="text" id="exchange-contact" maxlength="200" placeholder="e.g., an email address, or a note about where to find you" />
+
+      <div class="modal-actions">
+        <button type="button" id="exchange-cancel-btn" class="btn btn-outline">Cancel</button>
+        <button type="submit" class="btn btn-primary">Post to neighbours</button>
+      </div>
+      <div id="exchange-form-status" class="pitch-status"></div>
+    </form>
+  </dialog>
+
+  <script src="js/utils.js"></script>
+  <script src="js/exchange-posts.js"></script>
+</body>
+</html>

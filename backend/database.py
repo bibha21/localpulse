@@ -82,9 +82,17 @@ def init_db():
             title TEXT NOT NULL,
             description TEXT NOT NULL,
             contact TEXT,
+            status TEXT NOT NULL DEFAULT 'open',
+            completed_at TEXT,
             created_at TEXT DEFAULT CURRENT_TIMESTAMP
         )
     """)
+    # Backfill for databases created before status/completed_at existed.
+    existing_exchange_columns = {row[1] for row in conn.execute("PRAGMA table_info(exchange_posts)")}
+    if "status" not in existing_exchange_columns:
+        conn.execute("ALTER TABLE exchange_posts ADD COLUMN status TEXT NOT NULL DEFAULT 'open'")
+    if "completed_at" not in existing_exchange_columns:
+        conn.execute("ALTER TABLE exchange_posts ADD COLUMN completed_at TEXT")
     conn.commit()
     conn.close()
 

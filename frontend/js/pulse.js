@@ -48,13 +48,19 @@ const EXCHANGE_ITEMS = [
 ];
 
 function exchangeCardHtml(item, count) {
-  const countLabel = count ? `<span class="exchange-count">${count} post${count === 1 ? "" : "s"}</span>` : "";
+  const postsUrl = `exchange-posts.html?category=${encodeURIComponent(item.category)}`;
+  const countLabel = count
+    ? `<a href="${postsUrl}" class="exchange-count">${count} post${count === 1 ? "" : "s"}</a>`
+    : "";
   return `
     <div class="exchange-card">
       <div class="exchange-icon">${item.icon}</div>
-      <h4>${escapeHtml(item.title)} ${countLabel}</h4>
+      <h4><a href="${postsUrl}" class="exchange-title-link">${escapeHtml(item.title)}</a> ${countLabel}</h4>
       <p>${escapeHtml(item.description)}</p>
-      <button type="button" class="btn btn-outline exchange-btn" data-category="${item.category}" data-title="${escapeHtml(item.title)}">Share / Ask</button>
+      <div class="exchange-card-actions">
+        <a href="${postsUrl}" class="btn btn-outline">View posts</a>
+        <button type="button" class="btn btn-primary exchange-btn" data-category="${item.category}" data-title="${escapeHtml(item.title)}">Share / Ask</button>
+      </div>
     </div>
   `;
 }
@@ -73,6 +79,48 @@ async function renderExchange() {
   grid.querySelectorAll(".exchange-btn").forEach((btn) => {
     btn.addEventListener("click", () => openExchangeDialog(btn.dataset.category, btn.dataset.title));
   });
+}
+
+function rewardsCardHtml(rewards) {
+  const latestTier = rewards.tiers_reached.length
+    ? rewards.tiers_reached[rewards.tiers_reached.length - 1]
+    : null;
+  const nextTierLine = rewards.next_tier
+    ? `${rewards.next_tier.threshold - rewards.total_points} points to ${escapeHtml(rewards.next_tier.name)}`
+    : "All badge tiers reached!";
+  const cityLine = rewards.city_reward_unlocked
+    ? `🎉 Unlocked for ${rewards.year}: ${escapeHtml(rewards.city_yearly_reward)}`
+    : `${rewards.city_yearly_reward_threshold - rewards.year_points} points to this year's City of Espoo reward`;
+
+  return `
+    <h3>🏆 Neighbourhood Rewards</h3>
+    <p class="muted">Every completed exchange post earns the whole neighbourhood ${rewards.points_per_deed} points.</p>
+    <div class="rewards-stats">
+      <div>
+        <div class="overview-status">${rewards.total_points}</div>
+        <div class="overview-detail">total points (${rewards.total_completed_deeds} deeds)</div>
+      </div>
+      <div>
+        <div class="overview-status">${rewards.year_points}</div>
+        <div class="overview-detail">points in ${rewards.year} (${rewards.year_completed_deeds} deeds)</div>
+      </div>
+    </div>
+    ${latestTier ? `<p>🥉 Current badge: <strong>${escapeHtml(latestTier)}</strong></p>` : ""}
+    <p class="muted">${nextTierLine}</p>
+    <p class="rewards-city-line">${cityLine}</p>
+  `;
+}
+
+async function loadRewards() {
+  const card = document.getElementById("rewards-card");
+  try {
+    const res = await fetch(`${API_BASE}/exchange/rewards`);
+    const rewards = await res.json();
+    card.innerHTML = rewardsCardHtml(rewards);
+  } catch (err) {
+    card.innerHTML = '<p class="ideas-empty">Couldn\'t load neighbourhood rewards right now.</p>';
+    console.error(err);
+  }
 }
 
 const exchangeDialog = document.getElementById("exchange-dialog");
@@ -107,6 +155,8 @@ exchangeForm.addEventListener("submit", async (e) => {
       body: JSON.stringify({ category: activeExchangeCategory, title, description, contact: contact || null }),
     });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    rememberMyExchangePost(data.id);
     exchangeStatus.textContent = "Posted! Your neighbours can now see this.";
     setTimeout(() => {
       exchangeDialog.close();
@@ -247,5 +297,6 @@ async function loadActivity() {
 
 loadOverview();
 renderExchange();
+loadRewards();
 loadInitiatives();
 loadActivity();

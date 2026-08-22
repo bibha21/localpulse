@@ -1121,6 +1121,67 @@ main {
   border-radius: 999px;
   margin-left: 4px;
   vertical-align: middle;
+  text-decoration: none;
+}
+
+.exchange-title-link {
+  color: #222;
+  text-decoration: none;
+}
+
+.exchange-title-link:hover {
+  color: #0c447c;
+  text-decoration: underline;
+}
+
+.exchange-card-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.exchange-card-actions .btn {
+  flex: 1;
+  text-align: center;
+}
+
+/* --- Community Exchange posts list page --- */
+
+.back-link {
+  display: inline-block;
+  color: #0c447c;
+  font-size: 13px;
+  text-decoration: none;
+  margin-bottom: 14px;
+}
+
+.back-link:hover {
+  text-decoration: underline;
+}
+
+.exchange-post {
+  background: white;
+  border: 1px solid #e5e9ed;
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 12px;
+}
+
+.exchange-post h4 {
+  margin: 0 0 6px;
+  font-size: 16px;
+}
+
+.exchange-post p {
+  margin: 0 0 8px;
+  font-size: 14px;
+  color: #555;
+}
+
+.exchange-post-contact {
+  font-size: 13px;
+  color: #0c447c;
+  margin-bottom: 6px;
 }
 
 /* --- Community Exchange "Share / Ask" modal --- */
@@ -1175,4 +1236,62 @@ main {
   justify-content: flex-end;
   gap: 10px;
   margin-top: 18px;
+}
+
+/* --- Neighbourhood rewards --- */
+
+.rewards-card {
+  margin-top: 16px;
+  background: linear-gradient(135deg, #0c447c, #1c7a30);
+  color: white;
+}
+
+.rewards-card h3 {
+  margin: 0 0 4px;
+  color: white;
+}
+
+.rewards-card .muted {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.rewards-stats {
+  display: flex;
+  gap: 24px;
+  margin: 14px 0;
+}
+
+.rewards-card .overview-status {
+  color: white;
+}
+
+.rewards-card .overview-detail {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.rewards-city-line {
+  margin: 10px 0 0;
+  font-weight: 600;
+}
+
+/* --- Exchange post cards with status/completion --- */
+
+.exchange-post-top {
+  margin-bottom: 6px;
+}
+
+.exchange-status-done {
+  background: #e4f3e6;
+  color: #1c7a30;
+}
+
+.exchange-post--done {
+  opacity: 0.75;
+}
+
+.exchange-post-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
 }
