@@ -107,6 +107,7 @@ def get_area_patterns():
                     "confidence": r["confidence"],
                     "needs_review": bool(r["needs_review"]),
                     "created_at": r["created_at"],
+                    "status": r["status"],
                 }
                 for r in reports
             ],

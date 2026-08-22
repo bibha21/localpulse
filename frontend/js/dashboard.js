@@ -115,14 +115,23 @@ function renderAreaCards(areas) {
       .map(([category, count]) => `${category}: ${count}`)
       .join(", ");
     const reportList = area.reports
-      .map(
-        (r) => `
-          <li>
+      .map((r) => {
+        const currentIndex = STATUS_PIPELINE.indexOf(r.status);
+        const nextStatus = STATUS_PIPELINE[currentIndex + 1];
+        const actionBtn = nextStatus
+          ? `<button type="button" class="advance-status-btn" data-id="${r.id}">Take action → ${STATUS_LABELS[nextStatus]}</button>`
+          : `<span class="status-badge status-completed">Pipeline complete</span>`;
+        return `
+          <li data-report-id="${r.id}">
             [${escapeHtml(r.category)}${r.needs_review ? ", needs review" : ""}]
             ${escapeHtml(r.description) || "(no description)"}
             <br><small>confidence: ${r.confidence} · reported: ${escapeHtml(r.created_at)}</small>
-          </li>`
-      )
+            <div class="report-action">
+              <span class="status-badge status-${escapeHtml(r.status)}">${STATUS_LABELS[r.status] || r.status}</span>
+              ${actionBtn}
+            </div>
+          </li>`;
+      })
       .join("");
     card.innerHTML = `
       <strong title="grid ${escapeHtml(area.area)}">${escapeHtml(area.location)}</strong> ${flag} - <span class="area-toggle" style="cursor: pointer; text-decoration: underline;">${area.report_count} reports</span><br>
@@ -140,6 +149,34 @@ function renderAreaCards(areas) {
       e.stopPropagation();
       const list = card.querySelector(".report-list");
       list.style.display = list.style.display === "none" ? "block" : "none";
+    });
+    card.querySelector(".report-list").addEventListener("click", async (e) => {
+      e.stopPropagation();
+      const btn = e.target.closest(".advance-status-btn");
+      if (!btn) return;
+      btn.disabled = true;
+      btn.textContent = "Updating...";
+      try {
+        const res = await fetch(`${API_BASE}/reports/${btn.dataset.id}/advance-status`, { method: "POST" });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        // Update just this report's status in place - reloading the whole
+        // dashboard would re-collapse every expanded report list, making a
+        // successful update look like nothing happened.
+        const li = card.querySelector(`li[data-report-id="${data.id}"]`);
+        const nextStatus = STATUS_PIPELINE[STATUS_PIPELINE.indexOf(data.status) + 1];
+        const nextActionBtn = nextStatus
+          ? `<button type="button" class="advance-status-btn" data-id="${data.id}">Take action → ${STATUS_LABELS[nextStatus]}</button>`
+          : `<span class="status-badge status-completed">Pipeline complete</span>`;
+        li.querySelector(".report-action").innerHTML = `
+          <span class="status-badge status-${escapeHtml(data.status)}">${STATUS_LABELS[data.status] || data.status}</span>
+          ${nextActionBtn}
+        `;
+      } catch (err) {
+        btn.disabled = false;
+        btn.textContent = "Take action →";
+        console.error(err);
+      }
     });
     card.addEventListener("click", () => selectArea(area.area));
     container.appendChild(card);
