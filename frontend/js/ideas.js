@@ -55,12 +55,24 @@ function matchesSearch(idea) {
   return haystack.includes(searchTerm);
 }
 
+// A seed idea belongs to one demo neighbourhood; a real resident pitch has
+// no neighbourhood (ideaHood -> null) and shows under every filter.
+function matchesHood(idea) {
+  const hood = currentHood();
+  if (!hood) return true;
+  const h = ideaHood(idea);
+  return h === null || h === hood;
+}
+
 function renderIdeas() {
   const grid = document.getElementById("ideas-grid");
-  const filtered = currentIdeas.filter(matchesSearch);
+  const filtered = currentIdeas.filter((i) => matchesSearch(i) && matchesHood(i));
 
-  if (searchTerm && filtered.length === 0) {
-    grid.innerHTML = `<p class="ideas-empty">${t("ideas.noMatch", { term: escapeHtml(searchTerm) })}</p>` + ctaCardHtml();
+  if (filtered.length === 0) {
+    const msg = searchTerm
+      ? t("ideas.noMatch", { term: escapeHtml(searchTerm) })
+      : t("ideas.noHood", { hood: escapeHtml(hoodLabel(currentHood())) });
+    grid.innerHTML = `<p class="ideas-empty">${msg}</p>` + ctaCardHtml();
     return;
   }
   grid.innerHTML = filtered.map(ideaCardHtml).join("") + ctaCardHtml();
@@ -78,8 +90,9 @@ async function loadIdeas() {
   }
 }
 
-// Re-render idea cards (badges, buttons, CTA) when the language changes.
+// Re-render idea cards when the language or neighbourhood filter changes.
 window.addEventListener("i18n:changed", renderIdeas);
+window.addEventListener("hood:changed", renderIdeas);
 
 document.getElementById("sort-tabs").addEventListener("click", (e) => {
   const tab = e.target.closest(".sort-tab");
@@ -110,4 +123,5 @@ document.getElementById("ideas-grid").addEventListener("click", async (e) => {
   }
 });
 
+mountHoodFilter("#hood-mount");
 loadIdeas();

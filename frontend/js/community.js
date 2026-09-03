@@ -6,6 +6,7 @@ const DEMO_INITIATIVES = [
     id: 1,
     name: "Kauklahti Residents Association (example)",
     category: "Local associations",
+    neighbourhood: "Kauklahti",
     description: "A neighbourhood association organising resident meetings and local advocacy.",
     members: "120 members",
   },
@@ -13,6 +14,7 @@ const DEMO_INITIATIVES = [
     id: 2,
     name: "Matinkylä Running Club (example)",
     category: "Sports groups",
+    neighbourhood: "Matinkylä",
     description: "Weekly group runs along the Matinkylä coastal path, all paces welcome.",
     members: "45 members",
   },
@@ -20,6 +22,7 @@ const DEMO_INITIATIVES = [
     id: 3,
     name: "Leppävaara Youth Evening Meetups (example)",
     category: "Youth activities",
+    neighbourhood: "Leppävaara",
     description: "A safe, supervised evening space for teenagers to hang out and play games.",
     members: "60 regular attendees",
   },
@@ -27,6 +30,7 @@ const DEMO_INITIATIVES = [
     id: 4,
     name: "Espoonlahti Beach Cleanup Volunteers (example)",
     category: "Volunteer opportunities",
+    neighbourhood: "Espoonlahti",
     description: "Seasonal volunteer cleanups along the Espoonlahti shoreline.",
     members: "30 volunteers",
   },
@@ -34,6 +38,7 @@ const DEMO_INITIATIVES = [
     id: 5,
     name: "Tapiola Summer Market (example)",
     category: "Community events",
+    neighbourhood: "Tapiola",
     description: "A recurring outdoor market for local makers, food stalls and live music.",
     members: "Open to all",
   },
@@ -41,6 +46,7 @@ const DEMO_INITIATIVES = [
     id: 6,
     name: "Espoon keskus Cultural Circle (example)",
     category: "Cultural activities",
+    neighbourhood: "Espoon keskus",
     description: "Monthly gatherings celebrating Espoo's multicultural resident community.",
     members: "80 members",
   },
@@ -48,6 +54,7 @@ const DEMO_INITIATIVES = [
     id: 7,
     name: "Kauklahti Community Garden Project (example)",
     category: "Neighbourhood projects",
+    neighbourhood: "Kauklahti",
     description: "Turning an unused lot into raised-bed community gardens and a composting area.",
     members: "25 gardeners",
   },
@@ -55,6 +62,7 @@ const DEMO_INITIATIVES = [
     id: 8,
     name: "Leppävaara Tree-Planting Initiative (example)",
     category: "Environmental initiatives",
+    neighbourhood: "Leppävaara",
     description: "Resident-led tree planting days to green up shared courtyards and roadside verges.",
     members: "40 volunteers",
   },
@@ -128,15 +136,24 @@ function cardHtml(item) {
 function matchesFilters(item) {
   const categoryOk = activeCategory === "all" || item.category === activeCategory;
   const searchOk = !searchTerm || `${item.name} ${item.description}`.toLowerCase().includes(searchTerm);
-  return categoryOk && searchOk;
+  const hood = currentHood();
+  const hoodOk = !hood || item.neighbourhood === hood;
+  return categoryOk && searchOk && hoodOk;
 }
 
 function render() {
   const grid = document.getElementById("community-grid");
   const filtered = DEMO_INITIATIVES.filter(matchesFilters);
-  grid.innerHTML = filtered.length
-    ? filtered.map(cardHtml).join("")
-    : `<p class="ideas-empty">${t("community.noMatch")}</p>`;
+  if (filtered.length) {
+    grid.innerHTML = filtered.map(cardHtml).join("");
+    return;
+  }
+  const hood = currentHood();
+  grid.innerHTML = `<p class="ideas-empty">${
+    hood && !searchTerm && activeCategory === "all"
+      ? t("community.noHood", { hood: escapeHtml(hoodLabel(hood)) })
+      : t("community.noMatch")
+  }</p>`;
 }
 
 document.getElementById("category-tabs").addEventListener("click", (e) => {
@@ -164,6 +181,8 @@ window.addEventListener("i18n:changed", () => {
   relabelCategoryTabs();
   render();
 });
+window.addEventListener("hood:changed", render);
 
 buildCategoryTabs();
+mountHoodFilter("#hood-mount");
 render();

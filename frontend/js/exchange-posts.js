@@ -56,11 +56,19 @@ async function loadPosts() {
   const list = document.getElementById("exchange-posts-list");
   try {
     const res = await fetch(`${API_BASE}/exchange/?category=${encodeURIComponent(category)}`);
-    const posts = await res.json();
+    let posts = await res.json();
     // The backend already orders by created_at DESC (most recent first).
-    list.innerHTML = posts.length
-      ? posts.map(postItemHtml).join("")
-      : `<p class="ideas-empty">${t("exchangePosts.none", { title: escapeHtml(metaTitle()) })}</p>`;
+    if (currentHood()) posts = posts.filter((p) => matchesHood(exchangeHood, p));
+    if (posts.length) {
+      list.innerHTML = posts.map(postItemHtml).join("");
+    } else if (currentHood()) {
+      list.innerHTML = `<p class="ideas-empty">${t("exchangePosts.noneHood", {
+        title: escapeHtml(metaTitle()),
+        hood: escapeHtml(hoodLabel(currentHood())),
+      })}</p>`;
+    } else {
+      list.innerHTML = `<p class="ideas-empty">${t("exchangePosts.none", { title: escapeHtml(metaTitle()) })}</p>`;
+    }
   } catch (err) {
     list.innerHTML = `<p class="ideas-empty">${t("exchangePosts.loadFail")}</p>`;
     console.error(err);
@@ -189,5 +197,9 @@ window.addEventListener("i18n:changed", () => {
   loadRewards();
 });
 
+// Re-filter the post list when the shared neighbourhood filter changes.
+window.addEventListener("hood:changed", loadPosts);
+
+mountHoodFilter("#hood-mount");
 loadPosts();
 loadRewards();

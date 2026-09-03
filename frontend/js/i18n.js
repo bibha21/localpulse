@@ -28,6 +28,20 @@
       "lang.sv": "Svenska",
       "lang.aria": "Choose language",
 
+      // Neighbourhood (Espoo district) filter
+      "hood.label": "Neighbourhood",
+      "hood.all": "All neighbourhoods",
+      "hood.name.leppavaara": "Leppävaara",
+      "hood.name.tapiola": "Tapiola",
+      "hood.name.matinkyla": "Matinkylä",
+      "hood.name.espoon_keskus": "Espoon keskus",
+      "hood.name.espoonlahti": "Espoonlahti",
+      "hood.name.kauklahti": "Kauklahti",
+      "ideas.noHood": "No ideas pitched for {hood} yet.",
+      "community.noHood": "No community initiatives in {hood} yet.",
+      "pulse.noInitiativesHood": "No initiatives for {hood} yet.",
+      "pulse.activityHoodEmpty": "No recent activity in {hood}.",
+
       // --- shared: header / nav / footer ---
       "header.eyebrow": "City of Espoo",
       "header.eyebrowPlanner": "City of Espoo · Planner view",
@@ -312,6 +326,7 @@
       "exchangePosts.markComplete": "Mark as complete",
       "exchangePosts.markingComplete": "Marking complete...",
       "exchangePosts.none": "No posts yet in {title} - be the first to share or ask.",
+      "exchangePosts.noneHood": "No {title} posts in {hood} yet.",
       "exchangePosts.loadFail": "Couldn't load posts right now.",
 
       // --- topics.html ---
@@ -341,6 +356,19 @@
       "lang.fi": "Suomi",
       "lang.sv": "Svenska",
       "lang.aria": "Valitse kieli",
+
+      "hood.label": "Naapurusto",
+      "hood.all": "Kaikki naapurustot",
+      "hood.name.leppavaara": "Leppävaara",
+      "hood.name.tapiola": "Tapiola",
+      "hood.name.matinkyla": "Matinkylä",
+      "hood.name.espoon_keskus": "Espoon keskus",
+      "hood.name.espoonlahti": "Espoonlahti",
+      "hood.name.kauklahti": "Kauklahti",
+      "ideas.noHood": "Alueelle {hood} ei ole vielä ehdotettu ideoita.",
+      "community.noHood": "Ei yhteisöaloitteita alueella {hood} vielä.",
+      "pulse.noInitiativesHood": "Ei aloitteita alueella {hood} vielä.",
+      "pulse.activityHoodEmpty": "Ei viimeaikaista toimintaa alueella {hood}.",
 
       "header.eyebrow": "Espoon kaupunki",
       "header.eyebrowPlanner": "Espoon kaupunki · Suunnittelijan näkymä",
@@ -610,6 +638,7 @@
       "exchangePosts.markComplete": "Merkitse valmiiksi",
       "exchangePosts.markingComplete": "Merkitään valmiiksi...",
       "exchangePosts.none": "Ei vielä julkaisuja luokassa {title} - ole ensimmäinen, joka jakaa tai kysyy.",
+      "exchangePosts.noneHood": "Ei {title}-julkaisuja alueella {hood} vielä.",
       "exchangePosts.loadFail": "Julkaisuja ei voitu ladata juuri nyt.",
 
       "topics.docTitle": "LocalPulse - Kaupungin aiheet",
@@ -636,6 +665,19 @@
       "lang.fi": "Suomi",
       "lang.sv": "Svenska",
       "lang.aria": "Välj språk",
+
+      "hood.label": "Grannskap",
+      "hood.all": "Alla grannskap",
+      "hood.name.leppavaara": "Alberga",
+      "hood.name.tapiola": "Hagalund",
+      "hood.name.matinkyla": "Mattby",
+      "hood.name.espoon_keskus": "Esbo centrum",
+      "hood.name.espoonlahti": "Esboviken",
+      "hood.name.kauklahti": "Köklax",
+      "ideas.noHood": "Inga idéer föreslagna för {hood} än.",
+      "community.noHood": "Inga gemenskapsinitiativ i {hood} än.",
+      "pulse.noInitiativesHood": "Inga initiativ för {hood} än.",
+      "pulse.activityHoodEmpty": "Ingen aktivitet nyligen i {hood}.",
 
       "header.eyebrow": "Esbo stad",
       "header.eyebrowPlanner": "Esbo stad · Planerarvy",
@@ -905,6 +947,7 @@
       "exchangePosts.markComplete": "Markera som slutförd",
       "exchangePosts.markingComplete": "Markerar som slutförd...",
       "exchangePosts.none": "Inga inlägg än i {title} - var först med att dela eller fråga.",
+      "exchangePosts.noneHood": "Inga {title}-inlägg i {hood} än.",
       "exchangePosts.loadFail": "Inlägg kunde inte laddas just nu.",
 
       "topics.docTitle": "LocalPulse - Stadens ämnen",

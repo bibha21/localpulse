@@ -81,12 +81,19 @@ function exchangeCardHtml(item, count) {
 
 async function renderExchange() {
   const grid = document.getElementById("exchange-grid");
-  let counts = {};
+  // Counts are derived from the full post list rather than /exchange/counts so
+  // they can be scoped to the selected neighbourhood client-side.
+  const counts = {};
   try {
-    const res = await fetch(`${API_BASE}/exchange/counts`);
-    counts = await res.json();
+    const res = await fetch(`${API_BASE}/exchange/`);
+    const posts = await res.json();
+    posts
+      .filter((p) => matchesHood(exchangeHood, p))
+      .forEach((p) => {
+        counts[p.category] = (counts[p.category] || 0) + 1;
+      });
   } catch (err) {
-    console.error("Couldn't load exchange counts", err);
+    console.error("Couldn't load exchange posts", err);
   }
 
   grid.innerHTML = EXCHANGE_ITEMS.map((item) => exchangeCardHtml(item, counts[item.category])).join("");
@@ -233,14 +240,27 @@ function initiativeCardHtml(idea) {
   `;
 }
 
+// A seed idea belongs to one demo neighbourhood; real resident pitches
+// (ideaHood -> null) show under every filter.
+function ideaInHood(idea) {
+  const hood = currentHood();
+  if (!hood) return true;
+  const h = ideaHood(idea);
+  return h === null || h === hood;
+}
+
 async function loadInitiatives() {
   const grid = document.getElementById("initiatives-grid");
   try {
     const res = await fetch(`${API_BASE}/ideas/?sort=most_supported`);
-    const ideas = await res.json();
-    grid.innerHTML = ideas.length
-      ? ideas.slice(0, 2).map(initiativeCardHtml).join("")
-      : `<p class="ideas-empty">${t("pulse.noPitchedIdeasPre")}<a href="pitch-idea.html">${t("pulse.noPitchedIdeasLink")}</a>.</p>`;
+    const ideas = (await res.json()).filter(ideaInHood);
+    if (ideas.length) {
+      grid.innerHTML = ideas.slice(0, 2).map(initiativeCardHtml).join("");
+    } else if (currentHood()) {
+      grid.innerHTML = `<p class="ideas-empty">${t("pulse.noInitiativesHood", { hood: escapeHtml(hoodLabel(currentHood())) })}</p>`;
+    } else {
+      grid.innerHTML = `<p class="ideas-empty">${t("pulse.noPitchedIdeasPre")}<a href="pitch-idea.html">${t("pulse.noPitchedIdeasLink")}</a>.</p>`;
+    }
   } catch (err) {
     grid.innerHTML = `<p class="ideas-empty">${t("pulse.initiativesFail")}</p>`;
     console.error(err);
@@ -298,13 +318,19 @@ function ideaActivityItem(idea) {
 
 async function loadActivity() {
   const container = document.getElementById("activity-feed");
+  const hood = currentHood();
   try {
     const [reportsRes, ideasRes] = await Promise.all([
       fetch(`${API_BASE}/reports/`),
       fetch(`${API_BASE}/ideas/?sort=recent`),
     ]);
-    const reports = await reportsRes.json();
-    const ideas = await ideasRes.json();
+    let reports = await reportsRes.json();
+    let ideas = await ideasRes.json();
+
+    if (hood) {
+      reports = reports.filter((r) => nearestDistrict(r.latitude, r.longitude) === hood);
+      ideas = ideas.filter(ideaInHood);
+    }
 
     const items = [...reports.slice(0, 3).map(reportActivityItem), ...ideas.slice(0, 3).map(ideaActivityItem)]
       .sort((a, b) => (a.when < b.when ? 1 : -1))
@@ -312,7 +338,9 @@ async function loadActivity() {
 
     container.innerHTML = items.length
       ? items.map((i) => i.html).join("")
-      : `<p class="ideas-empty">${t("activity.none")}</p>`;
+      : `<p class="ideas-empty">${
+          hood ? t("pulse.activityHoodEmpty", { hood: escapeHtml(hoodLabel(hood)) }) : t("activity.none")
+        }</p>`;
   } catch (err) {
     container.innerHTML = `<p class="ideas-empty">${t("activity.loadFail")}</p>`;
     console.error(err);
@@ -334,4 +362,13 @@ window.addEventListener("i18n:changed", () => {
   loadAll();
 });
 
+// The neighbourhood filter scopes Community Exchange counts, Featured
+// Initiatives and Recent Activity. Overview and Rewards stay city-wide.
+window.addEventListener("hood:changed", () => {
+  renderExchange();
+  loadInitiatives();
+  loadActivity();
+});
+
+mountHoodFilter("#hood-mount");
 loadAll();
