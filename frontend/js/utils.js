@@ -9,14 +9,18 @@ function escapeHtml(value) {
 // Statuses match backend/database.py REPORT_STATUSES - kept in sync manually
 // since this is a small hackathon prototype without a shared schema.
 const STATUS_PIPELINE = ["submitted", "received", "under_review", "assigned", "action_planned", "completed"];
-const STATUS_LABELS = {
-  submitted: "Submitted",
-  received: "Received",
-  under_review: "Under Review",
-  assigned: "Assigned",
-  action_planned: "Action Planned",
-  completed: "Completed",
-};
+
+// Localized status label. Falls back to the raw key if i18n.js hasn't loaded.
+function statusLabel(status) {
+  return typeof window.t === "function" ? window.t("status." + status) : status;
+}
+
+// Back-compat shim: existing call sites use STATUS_LABELS[status]. This proxy
+// resolves each lookup through statusLabel() so it stays language-aware.
+const STATUS_LABELS = new Proxy(
+  {},
+  { get: (_target, prop) => statusLabel(String(prop)) }
+);
 
 // There's no login system in this prototype (see backend/routers/reports.py),
 // so "only the post's creator can mark it complete" is enforced the same way

@@ -8,20 +8,20 @@
 </head>
 <body>
   <header>
-    <span class="eyebrow">City of Espoo</span>
+    <span class="eyebrow" data-i18n="header.eyebrow">City of Espoo</span>
     <h1>LocalPulse</h1>
-    <p>Community Exchange</p>
+    <p data-i18n="exchange.fallbackTitle">Community Exchange</p>
     <nav>
-      <a href="pulse.html">The Pulse</a>
-      <a href="index.html">Report</a>
-      <a href="dashboard.html">Planner dashboard</a>
-      <a href="ideas.html">Idea Incubator</a>
-      <a href="community.html">Community</a>
+      <a href="pulse.html" data-i18n="nav.pulse">The Pulse</a>
+      <a href="index.html" data-i18n="nav.report">Report</a>
+      <a href="dashboard.html" data-i18n="nav.dashboard">Planner dashboard</a>
+      <a href="ideas.html" data-i18n="nav.ideas">Idea Incubator</a>
+      <a href="community.html" data-i18n="nav.community">Community</a>
     </nav>
   </header>
 
   <main class="ideas-main">
-    <a href="pulse.html" class="back-link">← Back to The Pulse</a>
+    <a href="pulse.html" class="back-link" data-i18n="exchangePosts.back">← Back to The Pulse</a>
 
     <div class="ideas-heading">
       <h2 id="exchange-posts-title">Community Exchange</h2>
@@ -33,7 +33,7 @@
     </div>
 
     <div class="ideas-toolbar">
-      <button type="button" id="exchange-posts-new-btn" class="btn btn-primary">+ Share / Ask</button>
+      <button type="button" id="exchange-posts-new-btn" class="btn btn-primary" data-i18n="exchangePosts.newBtn">+ Share / Ask</button>
     </div>
 
     <div id="exchange-posts-list">
@@ -43,21 +43,21 @@
 
   <dialog id="exchange-dialog" class="modal">
     <form id="exchange-form" class="modal-form">
-      <h3>Share / Ask</h3>
+      <h3 data-i18n="dialog.shareAsk">Share / Ask</h3>
       <p class="muted" id="exchange-dialog-category">Garden Share</p>
 
-      <label for="exchange-title">Short title</label>
-      <input type="text" id="exchange-title" maxlength="120" placeholder="e.g., Free tomato seedlings" required />
+      <label for="exchange-title" data-i18n="dialog.titleLabel">Short title</label>
+      <input type="text" id="exchange-title" maxlength="120" data-i18n-placeholder="dialog.titlePlaceholder" placeholder="e.g., Free tomato seedlings" required />
 
-      <label for="exchange-description">What are you offering or looking for?</label>
-      <textarea id="exchange-description" maxlength="500" placeholder="Describe what you'd like to share or ask your neighbours for..." required></textarea>
+      <label for="exchange-description" data-i18n="dialog.descLabel">What are you offering or looking for?</label>
+      <textarea id="exchange-description" maxlength="500" data-i18n-placeholder="dialog.descPlaceholder" placeholder="Describe what you'd like to share or ask your neighbours for..." required></textarea>
 
-      <label for="exchange-contact">How should neighbours reach you? (optional)</label>
-      <input type="text" id="exchange-contact" maxlength="200" placeholder="e.g., an email address, or a note about where to find you" />
+      <label for="exchange-contact" data-i18n="dialog.contactLabel">How should neighbours reach you? (optional)</label>
+      <input type="text" id="exchange-contact" maxlength="200" data-i18n-placeholder="dialog.contactPlaceholder" placeholder="e.g., an email address, or a note about where to find you" />
 
       <div class="modal-actions">
-        <button type="button" id="exchange-cancel-btn" class="btn btn-outline">Cancel</button>
-        <button type="submit" class="btn btn-primary">Post to neighbours</button>
+        <button type="button" id="exchange-cancel-btn" class="btn btn-outline" data-i18n="dialog.cancel">Cancel</button>
+        <button type="submit" class="btn btn-primary" data-i18n="dialog.post">Post to neighbours</button>
       </div>
       <div id="exchange-form-status" class="pitch-status"></div>
     </form>
@@ -66,19 +66,21 @@
   <footer class="site-footer">
     <div class="site-footer-inner">
       <p class="site-footer-brand">LocalPulse</p>
-      <p class="site-footer-tagline">Built for a more connected, resilient Espoo - together with residents and the City of Espoo.</p>
+      <p class="site-footer-tagline" data-i18n="footer.tagline">Built for a more connected, resilient Espoo - together with residents and the City of Espoo.</p>
       <nav class="site-footer-nav">
-        <a href="pulse.html">The Pulse</a>
-        <a href="index.html">Report</a>
-        <a href="dashboard.html">Planner dashboard</a>
-        <a href="ideas.html">Idea Incubator</a>
-        <a href="community.html">Community</a>
-        <a href="topics/topics.html">City topics</a>
+        <a href="pulse.html" data-i18n="nav.pulse">The Pulse</a>
+        <a href="index.html" data-i18n="nav.report">Report</a>
+        <a href="dashboard.html" data-i18n="nav.dashboard">Planner dashboard</a>
+        <a href="ideas.html" data-i18n="nav.ideas">Idea Incubator</a>
+        <a href="community.html" data-i18n="nav.community">Community</a>
+        <a href="topics/topics.html" data-i18n="nav.topics">City topics</a>
       </nav>
-      <p class="site-footer-copy">City of Espoo · LocalPulse prototype</p>
+      <p class="site-footer-copy" data-i18n="footer.copy">City of Espoo · LocalPulse prototype</p>
     </div>
   </footer>
 
+  <script src="js/i18n.js"></script>
+  <script src="js/content-i18n.js"></script>
   <script src="js/utils.js"></script>
   <script src="js/exchange-posts.js"></script>
 </body>

@@ -2,26 +2,38 @@ const API_BASE = "http://localhost:8000/api";
 
 function timeGreeting() {
   const hour = new Date().getHours();
-  if (hour < 12) return "Good morning";
-  if (hour < 18) return "Good afternoon";
-  return "Good evening";
+  if (hour < 12) return t("pulse.greetingMorning");
+  if (hour < 18) return t("pulse.greetingAfternoon");
+  return t("pulse.greetingEvening");
 }
-document.getElementById("greeting").textContent = `${timeGreeting()} 👋`;
+
+function renderGreeting() {
+  document.getElementById("greeting").textContent = `${timeGreeting()} 👋`;
+}
+renderGreeting();
 
 const OVERVIEW_META = {
-  safety: { icon: "🛡️", label: "Safety" },
-  greenspace: { icon: "🌳", label: "Greenspace" },
-  connectivity: { icon: "📶", label: "Connectivity" },
+  safety: { icon: "🛡️" },
+  greenspace: { icon: "🌳" },
+  connectivity: { icon: "📶" },
 };
 
 function overviewCardHtml(key, data) {
   const meta = OVERVIEW_META[key];
+  // Prefer the machine-readable keys from the backend so the status/detail
+  // show in the active language; fall back to the pre-formatted English.
+  const status = data.status_key
+    ? t("overview.status." + data.status_key)
+    : escapeHtml(data.status);
+  const detail = data.detail_key
+    ? t("overview.detail." + data.detail_key, data.detail_params || {})
+    : escapeHtml(data.detail);
   return `
     <div class="overview-card">
       <div class="overview-icon">${meta.icon}</div>
-      <div class="overview-label">${meta.label}</div>
-      <div class="overview-status">${escapeHtml(data.status)}</div>
-      <div class="overview-detail">${escapeHtml(data.detail)}</div>
+      <div class="overview-label">${t("pulse.overview." + key)}</div>
+      <div class="overview-status">${status}</div>
+      <div class="overview-detail">${detail}</div>
     </div>
   `;
 }
@@ -35,31 +47,33 @@ async function loadOverview() {
       .map((key) => overviewCardHtml(key, data[key]))
       .join("");
   } catch (err) {
-    grid.innerHTML = '<p class="ideas-empty">Couldn\'t load the neighbourhood pulse right now.</p>';
+    grid.innerHTML = `<p class="ideas-empty">${t("pulse.overviewFail")}</p>`;
     console.error(err);
   }
 }
 
+// Titles/descriptions are looked up per language via "exchange.<category>.*".
 const EXCHANGE_ITEMS = [
-  { category: "garden_share", icon: "🌱", title: "Garden Share", description: "Share extra gardening samples and veggies for a kind gesture." },
-  { category: "skill_swap", icon: "🧠", title: "Skill Swap", description: "Exchange skills with neighbours, from coding to cooking." },
-  { category: "tool_library", icon: "🛠️", title: "Tool Library", description: "Share tools and equipment to reduce waste and help others." },
-  { category: "neighborly_help", icon: "🤲", title: "Neighborly Help", description: "Offer help like mowing lawns or running errands for neighbours." },
+  { category: "garden_share", icon: "🌱" },
+  { category: "skill_swap", icon: "🧠" },
+  { category: "tool_library", icon: "🛠️" },
+  { category: "neighborly_help", icon: "🤲" },
 ];
 
 function exchangeCardHtml(item, count) {
   const postsUrl = `exchange-posts.html?category=${encodeURIComponent(item.category)}`;
+  const title = t("exchange." + item.category + ".title");
   const countLabel = count
-    ? `<a href="${postsUrl}" class="exchange-count">${count} post${count === 1 ? "" : "s"}</a>`
+    ? `<a href="${postsUrl}" class="exchange-count">${t(count === 1 ? "exchange.postsOne" : "exchange.postsMany", { count })}</a>`
     : "";
   return `
     <div class="exchange-card">
       <div class="exchange-icon">${item.icon}</div>
-      <h4><a href="${postsUrl}" class="exchange-title-link">${escapeHtml(item.title)}</a> ${countLabel}</h4>
-      <p>${escapeHtml(item.description)}</p>
+      <h4><a href="${postsUrl}" class="exchange-title-link">${escapeHtml(title)}</a> ${countLabel}</h4>
+      <p>${escapeHtml(t("exchange." + item.category + ".desc"))}</p>
       <div class="exchange-card-actions">
-        <a href="${postsUrl}" class="btn btn-outline">View posts</a>
-        <button type="button" class="btn btn-primary exchange-btn" data-category="${item.category}" data-title="${escapeHtml(item.title)}">Share / Ask</button>
+        <a href="${postsUrl}" class="btn btn-outline">${t("exchange.viewPosts")}</a>
+        <button type="button" class="btn btn-primary exchange-btn" data-category="${item.category}" data-title="${escapeHtml(title)}">${t("exchange.shareAsk")}</button>
       </div>
     </div>
   `;
@@ -81,31 +95,46 @@ async function renderExchange() {
   });
 }
 
+// Translated badge name from the backend's tier key, falling back to the
+// English name the API also sends.
+function tierName(key, fallback) {
+  return key ? t("rewards.tier." + key) : escapeHtml(fallback);
+}
+
 function rewardsCardHtml(rewards) {
-  const latestTier = rewards.tiers_reached.length
-    ? rewards.tiers_reached[rewards.tiers_reached.length - 1]
+  const reachedKeys = rewards.tiers_reached_keys || [];
+  const latestTier = reachedKeys.length
+    ? tierName(reachedKeys[reachedKeys.length - 1])
+    : rewards.tiers_reached.length
+    ? escapeHtml(rewards.tiers_reached[rewards.tiers_reached.length - 1])
     : null;
   const nextTierLine = rewards.next_tier
-    ? `${rewards.next_tier.threshold - rewards.total_points} points to ${escapeHtml(rewards.next_tier.name)}`
-    : "All badge tiers reached!";
+    ? t("rewards.pointsToTier", {
+        count: rewards.next_tier.threshold - rewards.total_points,
+        name: tierName(rewards.next_tier.key, rewards.next_tier.name),
+      })
+    : t("rewards.allTiers");
+  const cityReward = rewards.city_yearly_reward_key
+    ? t("rewards.cityGrant")
+    : escapeHtml(rewards.city_yearly_reward);
   const cityLine = rewards.city_reward_unlocked
-    ? `🎉 Unlocked for ${rewards.year}: ${escapeHtml(rewards.city_yearly_reward)}`
-    : `${rewards.city_yearly_reward_threshold - rewards.year_points} points to this year's City of Espoo reward`;
+    ? t("rewards.cityUnlocked", { year: rewards.year, reward: cityReward })
+    : t("rewards.cityToGo", { count: rewards.city_yearly_reward_threshold - rewards.year_points });
 
   return `
-    <h3>🏆 Neighbourhood Rewards</h3>
-    <p class="muted">Every completed exchange post earns the whole neighbourhood ${rewards.points_per_deed} points.</p>
+    <h3>${t("rewards.h3")}</h3>
+    <p class="muted">${t("rewards.intro", { points: rewards.points_per_deed })}</p>
     <div class="rewards-stats">
       <div>
         <div class="overview-status">${rewards.total_points}</div>
-        <div class="overview-detail">total points (${rewards.total_completed_deeds} deeds)</div>
+        <div class="overview-detail">${t("rewards.totalPoints", { count: rewards.total_completed_deeds })}</div>
       </div>
       <div>
         <div class="overview-status">${rewards.year_points}</div>
-        <div class="overview-detail">points in ${rewards.year} (${rewards.year_completed_deeds} deeds)</div>
+        <div class="overview-detail">${t("rewards.yearPoints", { year: rewards.year, count: rewards.year_completed_deeds })}</div>
       </div>
     </div>
-    ${latestTier ? `<p>🥉 Current badge: <strong>${escapeHtml(latestTier)}</strong></p>` : ""}
+    ${latestTier ? `<p>${t("rewards.currentBadge")} <strong>${latestTier}</strong></p>` : ""}
     <p class="muted">${nextTierLine}</p>
     <p class="rewards-city-line">${cityLine}</p>
   `;
@@ -118,7 +147,7 @@ async function loadRewards() {
     const rewards = await res.json();
     card.innerHTML = rewardsCardHtml(rewards);
   } catch (err) {
-    card.innerHTML = '<p class="ideas-empty">Couldn\'t load neighbourhood rewards right now.</p>';
+    card.innerHTML = `<p class="ideas-empty">${t("rewards.loadFail")}</p>`;
     console.error(err);
   }
 }
@@ -128,8 +157,11 @@ const exchangeForm = document.getElementById("exchange-form");
 const exchangeStatus = document.getElementById("exchange-form-status");
 let activeExchangeCategory = null;
 
+let activeExchangeTitleKey = null;
+
 function openExchangeDialog(category, title) {
   activeExchangeCategory = category;
+  activeExchangeTitleKey = category;
   document.getElementById("exchange-dialog-category").textContent = title;
   exchangeForm.reset();
   exchangeStatus.textContent = "";
@@ -147,7 +179,7 @@ exchangeForm.addEventListener("submit", async (e) => {
   const description = document.getElementById("exchange-description").value.trim();
   const contact = document.getElementById("exchange-contact").value.trim();
 
-  exchangeStatus.textContent = "Posting...";
+  exchangeStatus.textContent = t("dialog.posting");
   try {
     const res = await fetch(`${API_BASE}/exchange/`, {
       method: "POST",
@@ -157,44 +189,44 @@ exchangeForm.addEventListener("submit", async (e) => {
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
     rememberMyExchangePost(data.id);
-    exchangeStatus.textContent = "Posted! Your neighbours can now see this.";
+    exchangeStatus.textContent = t("dialog.posted");
     setTimeout(() => {
       exchangeDialog.close();
       renderExchange();
     }, 700);
   } catch (err) {
-    exchangeStatus.textContent = "Something went wrong - is the backend running?";
+    exchangeStatus.textContent = t("dialog.error");
     console.error(err);
   }
 });
 
 function initiativeTags(idea) {
   const tags = [];
-  if (idea.needs_funding) tags.push("Seeking Funding");
-  if (idea.environmental_impact === "High Impact") tags.push("Eco-Friendly");
-  if (!tags.length) tags.push("High Social Value");
+  if (idea.needs_funding) tags.push(t("ideas.badgeSeekingFunding"));
+  if (idea.environmental_impact === "High Impact") tags.push(t("ideas.badgeEco"));
+  if (!tags.length) tags.push(t("ideas.badgeSocial"));
   return tags;
 }
 
 function initiativeCardHtml(idea) {
   const tags = initiativeTags(idea)
-    .map((t) => `<span class="idea-badge">${escapeHtml(t)}</span>`)
+    .map((tag) => `<span class="idea-badge">${escapeHtml(tag)}</span>`)
     .join("");
   return `
     <div class="initiative-card">
       <div class="initiative-visual">🌟</div>
       <div class="initiative-body">
         <div class="initiative-tags">${tags}</div>
-        <h4>${escapeHtml(idea.title)}</h4>
-        <p>${escapeHtml(idea.description)}</p>
+        <h4>${escapeHtml(tc(idea.title))}</h4>
+        <p>${escapeHtml(tc(idea.description))}</p>
         <div class="idea-meta">
           <span>👍 ${idea.support_count}</span>
-          <span>👥 ${idea.volunteer_count} volunteers</span>
+          <span>👥 ${idea.volunteer_count} ${t("pulse.volunteersLower")}</span>
           <span>💶 €${idea.est_budget_min} - €${idea.est_budget_max}</span>
         </div>
         <div class="idea-card-actions">
-          <button type="button" class="btn btn-primary" data-action="support" data-id="${idea.id}">Support</button>
-          <button type="button" class="btn btn-outline" data-action="volunteer" data-id="${idea.id}">Volunteer</button>
+          <button type="button" class="btn btn-primary" data-action="support" data-id="${idea.id}">${t("ideas.support")}</button>
+          <button type="button" class="btn btn-outline" data-action="volunteer" data-id="${idea.id}">${t("ideas.volunteer")}</button>
         </div>
       </div>
     </div>
@@ -208,9 +240,9 @@ async function loadInitiatives() {
     const ideas = await res.json();
     grid.innerHTML = ideas.length
       ? ideas.slice(0, 2).map(initiativeCardHtml).join("")
-      : '<p class="ideas-empty">No pitched ideas yet - be the first to <a href="pitch-idea.html">share one</a>.</p>';
+      : `<p class="ideas-empty">${t("pulse.noPitchedIdeasPre")}<a href="pitch-idea.html">${t("pulse.noPitchedIdeasLink")}</a>.</p>`;
   } catch (err) {
-    grid.innerHTML = '<p class="ideas-empty">Couldn\'t load featured initiatives right now.</p>';
+    grid.innerHTML = `<p class="ideas-empty">${t("pulse.initiativesFail")}</p>`;
     console.error(err);
   }
 }
@@ -229,27 +261,19 @@ document.getElementById("initiatives-grid").addEventListener("click", async (e) 
   }
 });
 
-const STATUS_VERBS = {
-  submitted: "was submitted",
-  received: "was received by the city",
-  under_review: "is under review",
-  assigned: "was assigned to a team",
-  action_planned: "has an action planned",
-  completed: "was resolved",
-};
-
 // Only category/status/timestamp ever get shown here - never a report's raw
 // free-text description, matching the privacy rule used across the rest of
 // the app (see the planner dashboard's own privacy note).
 function reportActivityItem(report) {
-  const verb = STATUS_VERBS[report.status] || "was updated";
+  const verbKey = "activity.verb." + report.status;
+  const verb = t(verbKey) === verbKey ? t("activity.verb.default") : t(verbKey);
   return {
     when: report.created_at,
     html: `
       <div class="activity-item">
         <span class="activity-icon">📍</span>
         <div>
-          <strong>${escapeHtml(report.category)}</strong> report ${verb}.
+          ${t("activity.reportLine", { category: `<strong>${escapeHtml(catLabel(report.category))}</strong>`, verb })}
           <div class="activity-time">${escapeHtml(report.created_at)}</div>
         </div>
       </div>
@@ -264,8 +288,8 @@ function ideaActivityItem(idea) {
       <div class="activity-item">
         <span class="activity-icon">💡</span>
         <div>
-          New idea pitched: <strong>${escapeHtml(idea.title)}</strong>.
-          <div class="activity-time">${escapeHtml(idea.created_at)} · <a href="ideas.html">Support it →</a></div>
+          ${t("activity.ideaLine", { title: `<strong>${escapeHtml(tc(idea.title))}</strong>` })}
+          <div class="activity-time">${escapeHtml(idea.created_at)} · <a href="ideas.html">${t("activity.supportIt")}</a></div>
         </div>
       </div>
     `,
@@ -288,15 +312,26 @@ async function loadActivity() {
 
     container.innerHTML = items.length
       ? items.map((i) => i.html).join("")
-      : '<p class="ideas-empty">No activity yet - be the first to report or pitch something.</p>';
+      : `<p class="ideas-empty">${t("activity.none")}</p>`;
   } catch (err) {
-    container.innerHTML = '<p class="ideas-empty">Couldn\'t load recent activity.</p>';
+    container.innerHTML = `<p class="ideas-empty">${t("activity.loadFail")}</p>`;
     console.error(err);
   }
 }
 
-loadOverview();
-renderExchange();
-loadRewards();
-loadInitiatives();
-loadActivity();
+function loadAll() {
+  loadOverview();
+  renderExchange();
+  loadRewards();
+  loadInitiatives();
+  loadActivity();
+}
+
+// Re-render everything dynamic when the language changes (static text is
+// handled by js/i18n.js).
+window.addEventListener("i18n:changed", () => {
+  renderGreeting();
+  loadAll();
+});
+
+loadAll();

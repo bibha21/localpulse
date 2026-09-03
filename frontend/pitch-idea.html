@@ -6,85 +6,85 @@
   <title>LocalPulse - Espoo | Pitch Your Idea</title>
   <link rel="stylesheet" href="css/style.css" />
 </head>
-<body>
+<body data-i18n-doctitle="pitch.docTitle">
   <header>
-    <span class="eyebrow">City of Espoo</span>
+    <span class="eyebrow" data-i18n="header.eyebrow">City of Espoo</span>
     <h1>LocalPulse</h1>
-    <p>Report a concern or idea in your Espoo neighbourhood</p>
+    <p data-i18n="ideas.headerSub">Report a concern or idea in your Espoo neighbourhood</p>
     <nav>
-      <a href="pulse.html">The Pulse</a>
-      <a href="index.html">Report</a>
-      <a href="dashboard.html">Planner dashboard</a>
-      <a href="ideas.html" class="active">Idea Incubator</a>
-      <a href="community.html">Community</a>
-      <a href="topics/topics.html">City topics</a>
+      <a href="pulse.html" data-i18n="nav.pulse">The Pulse</a>
+      <a href="index.html" data-i18n="nav.report">Report</a>
+      <a href="dashboard.html" data-i18n="nav.dashboard">Planner dashboard</a>
+      <a href="ideas.html" class="active" data-i18n="nav.ideas">Idea Incubator</a>
+      <a href="community.html" data-i18n="nav.community">Community</a>
+      <a href="topics/topics.html" data-i18n="nav.topics">City topics</a>
     </nav>
   </header>
 
   <main class="pitch-main">
     <div class="ideas-heading">
-      <h2>Pitch Your Idea</h2>
-      <p>Don't worry about perfect phrasing. Describe your vision, and our AI will help refine it into an actionable community proposal.</p>
+      <h2 data-i18n="pitch.h2">Pitch Your Idea</h2>
+      <p data-i18n="pitch.intro">Don't worry about perfect phrasing. Describe your vision, and our AI will help refine it into an actionable community proposal.</p>
     </div>
 
     <div class="pitch-layout">
       <form id="pitch-form" class="pitch-form">
         <div class="card">
-          <label for="title">Give your idea a short title</label>
-          <input type="text" id="title" placeholder="e.g., Community garden on 4th street" maxlength="120" required />
+          <label for="title" data-i18n="pitch.titleLabel">Give your idea a short title</label>
+          <input type="text" id="title" data-i18n-placeholder="pitch.titlePlaceholder" placeholder="e.g., Community garden on 4th street" maxlength="120" required />
 
-          <label for="description">Describe your idea in plain language</label>
-          <textarea id="description" placeholder="e.g., I think we should turn the empty lot on 4th street into a community garden. We could have raised beds and a composting area..." maxlength="2000" required></textarea>
+          <label for="description" data-i18n="pitch.descLabel">Describe your idea in plain language</label>
+          <textarea id="description" data-i18n-placeholder="pitch.descPlaceholder" placeholder="e.g., I think we should turn the empty lot on 4th street into a community garden. We could have raised beds and a composting area..." maxlength="2000" required></textarea>
           <div class="muted" id="char-count">0 / 2000 characters</div>
 
-          <div class="ai-status" id="ai-status">AI is listening and ready to refine your idea...</div>
+          <div class="ai-status" id="ai-status" data-i18n="pitch.aiReady">AI is listening and ready to refine your idea...</div>
         </div>
 
         <div class="card">
-          <h3>Collaboration Needs</h3>
-          <p class="muted">What kind of support are you looking for?</p>
+          <h3 data-i18n="pitch.collabH3">Collaboration Needs</h3>
+          <p class="muted" data-i18n="pitch.collabIntro">What kind of support are you looking for?</p>
           <label class="checkbox-row">
-            <input type="checkbox" id="needs-volunteers" /> Looking for volunteers
+            <input type="checkbox" id="needs-volunteers" /> <span data-i18n="pitch.needVolunteers">Looking for volunteers</span>
           </label>
           <label class="checkbox-row">
-            <input type="checkbox" id="needs-mentor" /> Need a mentor/expert advice
+            <input type="checkbox" id="needs-mentor" /> <span data-i18n="pitch.needMentor">Need a mentor/expert advice</span>
           </label>
           <label class="checkbox-row">
-            <input type="checkbox" id="needs-funding" /> Seeking funding/grants
+            <input type="checkbox" id="needs-funding" /> <span data-i18n="pitch.needFunding">Seeking funding/grants</span>
           </label>
         </div>
       </form>
 
       <aside class="pitch-sidebar">
         <div class="card">
-          <h3>Impact Prediction</h3>
-          <p class="muted">Based on similar community projects.</p>
+          <h3 data-i18n="pitch.impactH3">Impact Prediction</h3>
+          <p class="muted" data-i18n="pitch.impactIntro">Based on similar community projects.</p>
           <div class="stat-row">
-            <span>Social Connectivity</span>
+            <span data-i18n="pitch.socialConnectivity">Social Connectivity</span>
             <span class="pill pill-blue" id="impact-social">-</span>
           </div>
           <div class="stat-row">
-            <span>Environmental</span>
+            <span data-i18n="pitch.environmental">Environmental</span>
             <span class="pill pill-green" id="impact-environmental">-</span>
           </div>
         </div>
 
         <div class="card">
-          <h3>Resource Estimation</h3>
-          <p class="muted">Preliminary estimates to help you plan.</p>
+          <h3 data-i18n="pitch.resourceH3">Resource Estimation</h3>
+          <p class="muted" data-i18n="pitch.resourceIntro">Preliminary estimates to help you plan.</p>
           <div class="estimate-box">
-            <span>Est. Budget</span>
+            <span data-i18n="pitch.estBudget">Est. Budget</span>
             <strong id="estimate-budget">-</strong>
           </div>
           <div class="estimate-box">
-            <span>Volunteers Needed</span>
+            <span data-i18n="pitch.volunteersNeeded">Volunteers Needed</span>
             <strong id="estimate-volunteers">-</strong>
           </div>
         </div>
 
         <div class="pitch-actions">
-          <button type="button" id="save-draft" class="btn btn-outline">Save Draft</button>
-          <button type="submit" form="pitch-form" id="publish" class="btn btn-primary">Publish to Incubator</button>
+          <button type="button" id="save-draft" class="btn btn-outline" data-i18n="pitch.saveDraft">Save Draft</button>
+          <button type="submit" form="pitch-form" id="publish" class="btn btn-primary" data-i18n="pitch.publish">Publish to Incubator</button>
         </div>
 
         <div id="pitch-status" class="pitch-status"></div>
@@ -95,19 +95,20 @@
   <footer class="site-footer">
     <div class="site-footer-inner">
       <p class="site-footer-brand">LocalPulse</p>
-      <p class="site-footer-tagline">Built for a more connected, resilient Espoo - together with residents and the City of Espoo.</p>
+      <p class="site-footer-tagline" data-i18n="footer.tagline">Built for a more connected, resilient Espoo - together with residents and the City of Espoo.</p>
       <nav class="site-footer-nav">
-        <a href="pulse.html">The Pulse</a>
-        <a href="index.html">Report</a>
-        <a href="dashboard.html">Planner dashboard</a>
-        <a href="ideas.html">Idea Incubator</a>
-        <a href="community.html">Community</a>
-        <a href="topics/topics.html">City topics</a>
+        <a href="pulse.html" data-i18n="nav.pulse">The Pulse</a>
+        <a href="index.html" data-i18n="nav.report">Report</a>
+        <a href="dashboard.html" data-i18n="nav.dashboard">Planner dashboard</a>
+        <a href="ideas.html" data-i18n="nav.ideas">Idea Incubator</a>
+        <a href="community.html" data-i18n="nav.community">Community</a>
+        <a href="topics/topics.html" data-i18n="nav.topics">City topics</a>
       </nav>
-      <p class="site-footer-copy">City of Espoo · LocalPulse prototype</p>
+      <p class="site-footer-copy" data-i18n="footer.copy">City of Espoo · LocalPulse prototype</p>
     </div>
   </footer>
 
+  <script src="js/i18n.js"></script>
   <script src="js/pitch-idea.js"></script>
 </body>
 </html>

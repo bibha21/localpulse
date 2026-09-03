@@ -48,6 +48,28 @@ header h1 {
   border: none;
 }
 
+/* Floating language switcher injected by js/i18n.js on pages that don't
+   already have a #language control inside a .header-top row. */
+header {
+  position: relative;
+}
+
+.lang-switcher {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  z-index: 5;
+}
+
+.lang-switcher select {
+  padding: 4px 8px;
+  border-radius: 6px;
+  border: none;
+  background: rgba(255, 255, 255, 0.92);
+  color: #222;
+  font-size: 13px;
+}
+
 .note-row {
   display: flex;
   gap: 8px;

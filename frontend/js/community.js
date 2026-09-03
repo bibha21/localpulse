@@ -82,6 +82,13 @@ function toggleInterest(id) {
   localStorage.setItem(INTEREST_KEY, JSON.stringify([...interests]));
 }
 
+// Category keys are the English strings in DEMO_INITIATIVES; the visible label
+// is looked up per language (data-category stays the English key so filtering
+// keeps working across a language switch).
+function categoryLabel(category) {
+  return category === "all" ? t("community.tabAll") : t("community.cat." + category);
+}
+
 function buildCategoryTabs() {
   const categories = [...new Set(DEMO_INITIATIVES.map((i) => i.category))];
   const tabsEl = document.getElementById("category-tabs");
@@ -90,8 +97,14 @@ function buildCategoryTabs() {
     btn.type = "button";
     btn.className = "sort-tab";
     btn.dataset.category = category;
-    btn.textContent = category;
+    btn.textContent = categoryLabel(category);
     tabsEl.appendChild(btn);
+  });
+}
+
+function relabelCategoryTabs() {
+  document.querySelectorAll("#category-tabs .sort-tab").forEach((btn) => {
+    btn.textContent = categoryLabel(btn.dataset.category);
   });
 }
 
@@ -99,13 +112,13 @@ function cardHtml(item) {
   const interested = getInterests().has(item.id);
   return `
     <div class="idea-card" data-id="${item.id}">
-      <div class="idea-card-top"><span class="idea-badge">${escapeHtml(item.category)}</span></div>
-      <h3>${escapeHtml(item.name)}</h3>
-      <p>${escapeHtml(item.description)}</p>
-      <div class="idea-meta"><span>👥 ${escapeHtml(item.members)}</span></div>
+      <div class="idea-card-top"><span class="idea-badge">${escapeHtml(categoryLabel(item.category))}</span></div>
+      <h3>${escapeHtml(tc(item.name))}</h3>
+      <p>${escapeHtml(tc(item.description))}</p>
+      <div class="idea-meta"><span>👥 ${escapeHtml(tc(item.members))}</span></div>
       <div class="idea-card-actions">
         <button type="button" class="btn ${interested ? "btn-primary support-btn supported" : "btn-outline"}" data-action="interest" data-id="${item.id}">
-          ${interested ? "✓ Interested" : "I'm interested"}
+          ${interested ? t("community.interested") : t("community.imInterested")}
         </button>
       </div>
     </div>
@@ -123,7 +136,7 @@ function render() {
   const filtered = DEMO_INITIATIVES.filter(matchesFilters);
   grid.innerHTML = filtered.length
     ? filtered.map(cardHtml).join("")
-    : '<p class="ideas-empty">No community initiatives match your search.</p>';
+    : `<p class="ideas-empty">${t("community.noMatch")}</p>`;
 }
 
 document.getElementById("category-tabs").addEventListener("click", (e) => {
@@ -144,6 +157,11 @@ document.getElementById("community-grid").addEventListener("click", (e) => {
   const btn = e.target.closest("button[data-action='interest']");
   if (!btn) return;
   toggleInterest(Number(btn.dataset.id));
+  render();
+});
+
+window.addEventListener("i18n:changed", () => {
+  relabelCategoryTabs();
   render();
 });
 

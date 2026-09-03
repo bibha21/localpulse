@@ -6,28 +6,28 @@
   <title>LocalPulse - Espoo | Community</title>
   <link rel="stylesheet" href="css/style.css" />
 </head>
-<body>
+<body data-i18n-doctitle="community.docTitle">
   <header>
-    <span class="eyebrow">City of Espoo</span>
+    <span class="eyebrow" data-i18n="header.eyebrow">City of Espoo</span>
     <h1>LocalPulse</h1>
-    <p>Find people and initiatives in your Espoo neighbourhood</p>
+    <p data-i18n="community.headerSub">Find people and initiatives in your Espoo neighbourhood</p>
     <nav>
-      <a href="pulse.html">The Pulse</a>
-      <a href="index.html">Report</a>
-      <a href="dashboard.html">Planner dashboard</a>
-      <a href="ideas.html">Idea Incubator</a>
-      <a href="community.html" class="active">Community</a>
-      <a href="topics/topics.html">City topics</a>
+      <a href="pulse.html" data-i18n="nav.pulse">The Pulse</a>
+      <a href="index.html" data-i18n="nav.report">Report</a>
+      <a href="dashboard.html" data-i18n="nav.dashboard">Planner dashboard</a>
+      <a href="ideas.html" data-i18n="nav.ideas">Idea Incubator</a>
+      <a href="community.html" class="active" data-i18n="nav.community">Community</a>
+      <a href="topics/topics.html" data-i18n="nav.topics">City topics</a>
     </nav>
   </header>
 
   <main class="ideas-main">
     <div class="ideas-heading">
-      <h2>Find People &amp; Community Initiatives</h2>
-      <p>Discover local associations, groups and activities near you, and reduce isolation by connecting with neighbours who share your interests.</p>
+      <h2 data-i18n="community.h2">Find People &amp; Community Initiatives</h2>
+      <p data-i18n="community.intro">Discover local associations, groups and activities near you, and reduce isolation by connecting with neighbours who share your interests.</p>
     </div>
 
-    <p class="demo-banner">
+    <p class="demo-banner" data-i18n-html="community.demoBanner">
       🧪 <strong>Demo content.</strong> These are illustrative examples for the prototype, not real
       Espoo organisations. A production build would connect to the City of Espoo's community and
       association registries.
@@ -35,9 +35,9 @@
 
     <div class="ideas-toolbar">
       <div class="sort-tabs" id="category-tabs">
-        <button type="button" class="sort-tab active" data-category="all">All</button>
+        <button type="button" class="sort-tab active" data-category="all" data-i18n="community.tabAll">All</button>
       </div>
-      <input type="search" id="community-search" class="ideas-search" placeholder="Search by keyword..." />
+      <input type="search" id="community-search" class="ideas-search" data-i18n-placeholder="community.searchPlaceholder" placeholder="Search by keyword..." />
     </div>
 
     <div class="ideas-grid" id="community-grid">
@@ -48,19 +48,21 @@
   <footer class="site-footer">
     <div class="site-footer-inner">
       <p class="site-footer-brand">LocalPulse</p>
-      <p class="site-footer-tagline">Built for a more connected, resilient Espoo - together with residents and the City of Espoo.</p>
+      <p class="site-footer-tagline" data-i18n="footer.tagline">Built for a more connected, resilient Espoo - together with residents and the City of Espoo.</p>
       <nav class="site-footer-nav">
-        <a href="pulse.html">The Pulse</a>
-        <a href="index.html">Report</a>
-        <a href="dashboard.html">Planner dashboard</a>
-        <a href="ideas.html">Idea Incubator</a>
-        <a href="community.html">Community</a>
-        <a href="topics/topics.html">City topics</a>
+        <a href="pulse.html" data-i18n="nav.pulse">The Pulse</a>
+        <a href="index.html" data-i18n="nav.report">Report</a>
+        <a href="dashboard.html" data-i18n="nav.dashboard">Planner dashboard</a>
+        <a href="ideas.html" data-i18n="nav.ideas">Idea Incubator</a>
+        <a href="community.html" data-i18n="nav.community">Community</a>
+        <a href="topics/topics.html" data-i18n="nav.topics">City topics</a>
       </nav>
-      <p class="site-footer-copy">City of Espoo · LocalPulse prototype</p>
+      <p class="site-footer-copy" data-i18n="footer.copy">City of Espoo · LocalPulse prototype</p>
     </div>
   </footer>
 
+  <script src="js/i18n.js"></script>
+  <script src="js/content-i18n.js"></script>
   <script src="js/utils.js"></script>
   <script src="js/community.js"></script>
 </body>

@@ -21,12 +21,13 @@ CATEGORIES = {"garden_share", "skill_swap", "tool_library", "neighborly_help"}
 POINTS_PER_COMPLETED_DEED = 10
 
 REWARD_TIERS = [
-    {"threshold": 50, "name": "Bronze Neighbour Badge"},
-    {"threshold": 150, "name": "Silver Neighbour Badge"},
-    {"threshold": 300, "name": "Gold Neighbour Badge"},
+    {"threshold": 50, "key": "bronze", "name": "Bronze Neighbour Badge"},
+    {"threshold": 150, "key": "silver", "name": "Silver Neighbour Badge"},
+    {"threshold": 300, "key": "gold", "name": "Gold Neighbour Badge"},
 ]
 
 CITY_YEARLY_REWARD_THRESHOLD = 300
+CITY_YEARLY_REWARD_KEY = "espoo_grant"
 CITY_YEARLY_REWARD = "City of Espoo Community Grant - funding for a shared neighbourhood improvement"
 
 
@@ -118,6 +119,7 @@ def get_rewards_summary():
     year_points = year_completed * POINTS_PER_COMPLETED_DEED
 
     tiers_reached = [t["name"] for t in REWARD_TIERS if total_points >= t["threshold"]]
+    tiers_reached_keys = [t["key"] for t in REWARD_TIERS if total_points >= t["threshold"]]
     next_tier = next((t for t in REWARD_TIERS if total_points < t["threshold"]), None)
 
     return {
@@ -128,8 +130,12 @@ def get_rewards_summary():
         "year_completed_deeds": year_completed,
         "year_points": year_points,
         "tiers_reached": tiers_reached,
+        # Machine-readable tier ids so the frontend can show a translated
+        # badge name; `tiers_reached`/`next_tier.name` keep the English text.
+        "tiers_reached_keys": tiers_reached_keys,
         "next_tier": next_tier,
         "city_yearly_reward_threshold": CITY_YEARLY_REWARD_THRESHOLD,
         "city_yearly_reward": CITY_YEARLY_REWARD,
+        "city_yearly_reward_key": CITY_YEARLY_REWARD_KEY,
         "city_reward_unlocked": year_points >= CITY_YEARLY_REWARD_THRESHOLD,
     }

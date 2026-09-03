@@ -16,21 +16,23 @@ function updatePredictionPanels(data) {
   document.getElementById("estimate-budget").textContent =
     `€${resources.budget_min} - €${resources.budget_max}`;
   document.getElementById("estimate-volunteers").textContent =
-    `${resources.volunteers_min}-${resources.volunteers_max} people`;
+    t("pitch.volunteersUnit", { min: resources.volunteers_min, max: resources.volunteers_max });
 }
 
-descriptionEl.addEventListener("input", () => {
-  charCountEl.textContent = `${descriptionEl.value.length} / 2000 characters`;
-});
+function updateCharCount() {
+  charCountEl.textContent = t("pitch.charCount", { n: descriptionEl.value.length });
+}
+
+descriptionEl.addEventListener("input", updateCharCount);
 
 async function refreshPreview() {
   const description = descriptionEl.value.trim();
   if (description.length < 10) {
-    aiStatusEl.textContent = "AI is listening and ready to refine your idea...";
+    aiStatusEl.textContent = t("pitch.aiReady");
     return;
   }
 
-  aiStatusEl.textContent = "AI is analyzing your idea...";
+  aiStatusEl.textContent = t("pitch.aiAnalyzing");
   try {
     const res = await fetch(`${API_BASE}/ideas/preview`, {
       method: "POST",
@@ -39,12 +41,16 @@ async function refreshPreview() {
     });
     const data = await res.json();
     updatePredictionPanels(data);
-    aiStatusEl.textContent = "Predictions updated based on your description.";
+    aiStatusEl.textContent = t("pitch.aiUpdated");
   } catch (err) {
-    aiStatusEl.textContent = "Couldn't reach the AI service - is the backend running?";
+    aiStatusEl.textContent = t("pitch.aiFail");
     console.error(err);
   }
 }
+
+// Keep the character counter in the active language.
+updateCharCount();
+window.addEventListener("i18n:changed", updateCharCount);
 
 descriptionEl.addEventListener("input", () => {
   clearTimeout(previewTimer);
@@ -64,11 +70,11 @@ async function submitIdea(status) {
   const description = descriptionEl.value.trim();
 
   if (!title || !description) {
-    statusEl.textContent = "Please add a title and description first.";
+    statusEl.textContent = t("pitch.needTitleDesc");
     return;
   }
 
-  statusEl.textContent = status === "draft" ? "Saving draft..." : "Publishing...";
+  statusEl.textContent = status === "draft" ? t("pitch.savingDraft") : t("pitch.publishing");
   try {
     const res = await fetch(`${API_BASE}/ideas/`, {
       method: "POST",
@@ -77,8 +83,7 @@ async function submitIdea(status) {
     });
     const data = await res.json();
     updatePredictionPanels(data);
-    statusEl.textContent =
-      status === "draft" ? "Draft saved." : "Published to the Idea Incubator!";
+    statusEl.textContent = status === "draft" ? t("pitch.draftSaved") : t("pitch.published");
     if (status !== "draft") {
       document.getElementById("pitch-form").reset();
       setTimeout(() => {
@@ -86,7 +91,7 @@ async function submitIdea(status) {
       }, 800);
     }
   } catch (err) {
-    statusEl.textContent = "Something went wrong - is the backend running?";
+    statusEl.textContent = t("pitch.error");
     console.error(err);
   }
 }

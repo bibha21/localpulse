@@ -192,35 +192,63 @@ def get_resident_overview():
     ideas = [dict(r) for r in conn.execute("SELECT * FROM ideas WHERE status = 'published'").fetchall()]
     conn.close()
 
+    # Each metric carries both the pre-formatted English (`status`/`detail`,
+    # kept for any non-localized consumer) and machine-readable keys the
+    # frontend uses to render a translated label. `detail_params` supplies the
+    # numbers the translated template interpolates.
     safety_reports = [r for r in reports if r["category"] == "safety"]
     safety_needing_review = sum(1 for r in safety_reports if r["needs_review"])
     if not safety_reports:
-        safety = {"status": "No reports yet", "detail": "No safety reports filed yet."}
+        safety = {
+            "status": "No reports yet",
+            "status_key": "no_reports",
+            "detail": "No safety reports filed yet.",
+            "detail_key": "safety_none",
+            "detail_params": {},
+        }
     elif safety_needing_review / len(safety_reports) >= 0.5:
         safety = {
             "status": "Needs Attention",
+            "status_key": "needs_attention",
             "detail": f"{safety_needing_review} of {len(safety_reports)} safety reports flagged for review.",
+            "detail_key": "safety_flagged",
+            "detail_params": {"flagged": safety_needing_review, "total": len(safety_reports)},
         }
     else:
         safety = {
             "status": "Improving",
+            "status_key": "improving",
             "detail": f"{len(safety_reports)} safety report(s) filed, mostly resolved.",
+            "detail_key": "safety_improving",
+            "detail_params": {"count": len(safety_reports)},
         }
 
     green_ideas = [i for i in ideas if i["environmental_impact"] == "High Impact"]
     greenspace = {
         "status": "High Interest" if green_ideas else "Getting Started",
+        "status_key": "high_interest" if green_ideas else "getting_started",
         "detail": f"{len(green_ideas)} active green pitch(es)." if green_ideas
         else "No green-space ideas pitched yet.",
+        "detail_key": "green_active" if green_ideas else "green_none",
+        "detail_params": {"count": len(green_ideas)} if green_ideas else {},
     }
 
     if ideas:
         avg_connectivity = sum(_parse_connectivity_pct(i["social_connectivity_score"]) for i in ideas) / len(ideas)
         connectivity = {
             "status": "Trending Up" if avg_connectivity >= 30 else "Building Momentum",
+            "status_key": "trending_up" if avg_connectivity >= 30 else "building_momentum",
             "detail": f"+{round(avg_connectivity)}% average social connectivity across {len(ideas)} idea(s).",
+            "detail_key": "conn_avg",
+            "detail_params": {"pct": round(avg_connectivity), "count": len(ideas)},
         }
     else:
-        connectivity = {"status": "No Activity Yet", "detail": "Pitch an idea to get started."}
+        connectivity = {
+            "status": "No Activity Yet",
+            "status_key": "no_activity",
+            "detail": "Pitch an idea to get started.",
+            "detail_key": "conn_none",
+            "detail_params": {},
+        }
 
     return {"safety": safety, "greenspace": greenspace, "connectivity": connectivity}

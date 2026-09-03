@@ -6,43 +6,43 @@
   <title>LocalPulse - Espoo | Idea Incubator</title>
   <link rel="stylesheet" href="css/style.css" />
 </head>
-<body>
+<body data-i18n-doctitle="ideas.docTitle">
   <header>
-    <span class="eyebrow">City of Espoo</span>
+    <span class="eyebrow" data-i18n="header.eyebrow">City of Espoo</span>
     <h1>LocalPulse</h1>
-    <p>Report a concern or idea in your Espoo neighbourhood</p>
+    <p data-i18n="ideas.headerSub">Report a concern or idea in your Espoo neighbourhood</p>
     <nav>
-      <a href="pulse.html">The Pulse</a>
-      <a href="index.html">Report</a>
-      <a href="dashboard.html">Planner dashboard</a>
-      <a href="ideas.html" class="active">Idea Incubator</a>
-      <a href="community.html">Community</a>
-      <a href="topics/topics.html">City topics</a>
+      <a href="pulse.html" data-i18n="nav.pulse">The Pulse</a>
+      <a href="index.html" data-i18n="nav.report">Report</a>
+      <a href="dashboard.html" data-i18n="nav.dashboard">Planner dashboard</a>
+      <a href="ideas.html" class="active" data-i18n="nav.ideas">Idea Incubator</a>
+      <a href="community.html" data-i18n="nav.community">Community</a>
+      <a href="topics/topics.html" data-i18n="nav.topics">City topics</a>
     </nav>
   </header>
 
   <main class="ideas-main">
     <div class="ideas-heading">
-      <h2>Idea Incubator</h2>
-      <p>Discover, support, and collaborate on fresh ideas pitched by your neighbours to improve our community spaces.</p>
+      <h2 data-i18n="ideas.h2">Idea Incubator</h2>
+      <p data-i18n="ideas.intro">Discover, support, and collaborate on fresh ideas pitched by your neighbours to improve our community spaces.</p>
     </div>
 
     <div class="ideas-toolbar">
       <div class="sort-tabs" id="sort-tabs">
-        <button type="button" class="sort-tab active" data-sort="recent">Recent</button>
-        <button type="button" class="sort-tab" data-sort="most_supported">Most Supported</button>
-        <button type="button" class="sort-tab" data-sort="urgent">Urgent Needs</button>
+        <button type="button" class="sort-tab active" data-sort="recent" data-i18n="ideas.sortRecent">Recent</button>
+        <button type="button" class="sort-tab" data-sort="most_supported" data-i18n="ideas.sortMostSupported">Most Supported</button>
+        <button type="button" class="sort-tab" data-sort="urgent" data-i18n="ideas.sortUrgent">Urgent Needs</button>
       </div>
-      <input type="search" id="ideas-search" class="ideas-search" placeholder="Search ideas by title or keyword..." />
+      <input type="search" id="ideas-search" class="ideas-search" data-i18n-placeholder="ideas.searchPlaceholder" placeholder="Search ideas by title or keyword..." />
     </div>
 
     <div class="ideas-grid" id="ideas-grid">
       <!-- idea cards populated by ideas.js -->
       <a class="idea-card idea-card--cta" href="pitch-idea.html">
         <div class="idea-cta-icon">+</div>
-        <h3>Have a bright idea?</h3>
-        <p>Got a concept to improve our neighbourhood? Pitch it to the community and gather support.</p>
-        <span class="btn btn-primary">Pitch a New Idea</span>
+        <h3 data-i18n="ideas.ctaTitle">Have a bright idea?</h3>
+        <p data-i18n="ideas.ctaBody">Got a concept to improve our neighbourhood? Pitch it to the community and gather support.</p>
+        <span class="btn btn-primary" data-i18n="ideas.ctaBtn">Pitch a New Idea</span>
       </a>
     </div>
   </main>
@@ -50,19 +50,21 @@
   <footer class="site-footer">
     <div class="site-footer-inner">
       <p class="site-footer-brand">LocalPulse</p>
-      <p class="site-footer-tagline">Built for a more connected, resilient Espoo - together with residents and the City of Espoo.</p>
+      <p class="site-footer-tagline" data-i18n="footer.tagline">Built for a more connected, resilient Espoo - together with residents and the City of Espoo.</p>
       <nav class="site-footer-nav">
-        <a href="pulse.html">The Pulse</a>
-        <a href="index.html">Report</a>
-        <a href="dashboard.html">Planner dashboard</a>
-        <a href="ideas.html">Idea Incubator</a>
-        <a href="community.html">Community</a>
-        <a href="topics/topics.html">City topics</a>
+        <a href="pulse.html" data-i18n="nav.pulse">The Pulse</a>
+        <a href="index.html" data-i18n="nav.report">Report</a>
+        <a href="dashboard.html" data-i18n="nav.dashboard">Planner dashboard</a>
+        <a href="ideas.html" data-i18n="nav.ideas">Idea Incubator</a>
+        <a href="community.html" data-i18n="nav.community">Community</a>
+        <a href="topics/topics.html" data-i18n="nav.topics">City topics</a>
       </nav>
-      <p class="site-footer-copy">City of Espoo · LocalPulse prototype</p>
+      <p class="site-footer-copy" data-i18n="footer.copy">City of Espoo · LocalPulse prototype</p>
     </div>
   </footer>
 
+  <script src="js/i18n.js"></script>
+  <script src="js/content-i18n.js"></script>
   <script src="js/utils.js"></script>
   <script src="js/ideas.js"></script>
 </body>

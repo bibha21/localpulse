@@ -7,68 +7,68 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <link rel="stylesheet" href="css/style.css" />
 </head>
-<body>
+<body data-i18n-doctitle="index.docTitle">
   <header class="hero">
     <div class="header-top">
-      <span class="eyebrow">City of Espoo</span>
-      <select id="language">
+      <span class="eyebrow" data-i18n="header.eyebrow">City of Espoo</span>
+      <select id="language" aria-label="Choose language">
         <option value="en">English</option>
         <option value="fi">Suomi</option>
         <option value="sv">Svenska</option>
       </select>
     </div>
-    <p class="hero-brand" data-i18n="title">LocalPulse</p>
-    <h1>Your Neighbourhood. Your Voice. Your Espoo.</h1>
-    <p class="hero-subtitle">
+    <p class="hero-brand">LocalPulse</p>
+    <h1 data-i18n="index.heroH1">Your Neighbourhood. Your Voice. Your Espoo.</h1>
+    <p class="hero-subtitle" data-i18n="index.heroSubtitle">
       Tell us what could make your neighbourhood safer, greener, more inclusive and more
       vibrant. AI helps turn your experience into ideas and actions - together with your
       community and the City of Espoo.
     </p>
-    <p data-i18n="subtitle">Report a concern or idea in your neighbourhood</p>
+    <p data-i18n="index.subtitle">Report a concern or idea in your neighbourhood</p>
     <div class="hero-ctas">
-      <a href="#report-form" class="hero-cta">📍 Report an Issue</a>
-      <a href="pitch-idea.html" class="hero-cta">💡 Share an Idea</a>
-      <a href="community.html" class="hero-cta">🤝 Find Community Activities</a>
-      <a href="dashboard.html" class="hero-cta">🗺️ Explore Neighbourhood Map</a>
+      <a href="#report-form" class="hero-cta" data-i18n="index.ctaReport">📍 Report an Issue</a>
+      <a href="pitch-idea.html" class="hero-cta" data-i18n="index.ctaIdea">💡 Share an Idea</a>
+      <a href="community.html" class="hero-cta" data-i18n="index.ctaCommunity">🤝 Find Community Activities</a>
+      <a href="dashboard.html" class="hero-cta" data-i18n="index.ctaMap">🗺️ Explore Neighbourhood Map</a>
     </div>
     <nav>
-      <a href="pulse.html">The Pulse</a>
-      <a href="index.html" class="active">Report</a>
-      <a href="dashboard.html">Planner dashboard</a>
-      <a href="ideas.html">Idea Incubator</a>
-      <a href="community.html">Community</a>
-      <a href="topics/topics.html">City topics</a>
+      <a href="pulse.html" data-i18n="nav.pulse">The Pulse</a>
+      <a href="index.html" class="active" data-i18n="nav.report">Report</a>
+      <a href="dashboard.html" data-i18n="nav.dashboard">Planner dashboard</a>
+      <a href="ideas.html" data-i18n="nav.ideas">Idea Incubator</a>
+      <a href="community.html" data-i18n="nav.community">Community</a>
+      <a href="topics/topics.html" data-i18n="nav.topics">City topics</a>
     </nav>
   </header>
 
   <main>
-    <button type="button" id="locate-btn" class="locate-btn">📍 Use my location</button>
+    <button type="button" id="locate-btn" class="locate-btn" data-i18n="index.locateBtn">📍 Use my location</button>
     <div id="map"></div>
 
     <form id="report-form">
-      <label for="note" data-i18n="noteLabel">What's going on?</label>
+      <label for="note" data-i18n="index.noteLabel">What's going on?</label>
       <div class="note-row">
-        <textarea id="note" data-i18n-placeholder="notePlaceholder" placeholder="e.g. Broken streetlight on Otaniementie" maxlength="1000"></textarea>
-        <button type="button" id="voice-btn" data-i18n="voiceBtn">🎤 Voice</button>
+        <textarea id="note" data-i18n-placeholder="index.notePlaceholder" placeholder="e.g. Broken streetlight on Otaniementie" maxlength="1000"></textarea>
+        <button type="button" id="voice-btn" data-i18n="index.voiceBtn">🎤 Voice</button>
       </div>
 
-      <label for="photo" data-i18n="photoLabel">Add a photo (optional)</label>
+      <label for="photo" data-i18n="index.photoLabel">Add a photo (optional)</label>
       <input type="file" id="photo" accept="image/*" />
 
-      <button type="submit" data-i18n="submitBtn">Submit report</button>
+      <button type="submit" data-i18n="index.submitBtn">Submit report</button>
     </form>
 
     <div id="status"></div>
 
-    <p class="privacy-note">
+    <p class="privacy-note" data-i18n="index.privacyNote">
       🔒 Your report is used to spot neighbourhood patterns for City of Espoo planners.
       Only aggregated, anonymised counts are shown on the planner dashboard - your exact
       location and note are never displayed publicly.
     </p>
 
     <section id="my-reports-section">
-      <h2>You Reported It. What Happened?</h2>
-      <p class="muted">Reports you've submitted from this browser, and where they stand.</p>
+      <h2 data-i18n="index.myReportsH2">You Reported It. What Happened?</h2>
+      <p class="muted" data-i18n="index.myReportsIntro">Reports you've submitted from this browser, and where they stand.</p>
       <div id="my-reports">
         <!-- populated by app.js -->
       </div>
@@ -78,20 +78,22 @@
   <footer class="site-footer">
     <div class="site-footer-inner">
       <p class="site-footer-brand">LocalPulse</p>
-      <p class="site-footer-tagline">Built for a more connected, resilient Espoo - together with residents and the City of Espoo.</p>
+      <p class="site-footer-tagline" data-i18n="footer.tagline">Built for a more connected, resilient Espoo - together with residents and the City of Espoo.</p>
       <nav class="site-footer-nav">
-        <a href="pulse.html">The Pulse</a>
-        <a href="index.html">Report</a>
-        <a href="dashboard.html">Planner dashboard</a>
-        <a href="ideas.html">Idea Incubator</a>
-        <a href="community.html">Community</a>
-        <a href="topics/topics.html">City topics</a>
+        <a href="pulse.html" data-i18n="nav.pulse">The Pulse</a>
+        <a href="index.html" data-i18n="nav.report">Report</a>
+        <a href="dashboard.html" data-i18n="nav.dashboard">Planner dashboard</a>
+        <a href="ideas.html" data-i18n="nav.ideas">Idea Incubator</a>
+        <a href="community.html" data-i18n="nav.community">Community</a>
+        <a href="topics/topics.html" data-i18n="nav.topics">City topics</a>
       </nav>
-      <p class="site-footer-copy">City of Espoo · LocalPulse prototype</p>
+      <p class="site-footer-copy" data-i18n="footer.copy">City of Espoo · LocalPulse prototype</p>
     </div>
   </footer>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/content-i18n.js"></script>
   <script src="js/utils.js"></script>
   <script src="js/app.js"></script>
 </body>
