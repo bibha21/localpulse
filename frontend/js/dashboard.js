@@ -90,6 +90,11 @@ function renderMap(areas) {
       weight: 2,
     })
       .addTo(map)
+      .bindTooltip(String(area.report_count), {
+        permanent: true,
+        direction: "center",
+        className: "area-count-label",
+      })
       .bindPopup(`<strong>${t("dash.reportsCount", { count: area.report_count })}</strong><br>${escapeHtml(area.location)}`)
       .on("click", () => selectArea(area.area));
     areaMarkers.set(area.area, circle);

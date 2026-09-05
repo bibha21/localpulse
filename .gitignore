@@ -10,7 +10,9 @@ venv/
 # Database
 backend/data/*.db
 
+# IDE
+.idea/
+*.iml
+
 # OS
 .DS_Store
-.idea/
-.idea/
